@@ -4,6 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        BlackjackGame bjGame = new BlackjackGame();
+        bjGame.GameStart();
     }
 }
