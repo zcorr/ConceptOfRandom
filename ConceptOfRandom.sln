@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConceptOfRandom", "ConceptOfRandom\ConceptOfRandom.csproj", "{404DDDD0-C291-4030-9283-AF45E8A4A27B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConceptOfRandomTests", "ConceptOfRandomTests\ConceptOfRandomTests.csproj", "{EBB76439-5161-4E0D-A2A6-DAA7494AA657}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{404DDDD0-C291-4030-9283-AF45E8A4A27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{404DDDD0-C291-4030-9283-AF45E8A4A27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{404DDDD0-C291-4030-9283-AF45E8A4A27B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB76439-5161-4E0D-A2A6-DAA7494AA657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB76439-5161-4E0D-A2A6-DAA7494AA657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB76439-5161-4E0D-A2A6-DAA7494AA657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB76439-5161-4E0D-A2A6-DAA7494AA657}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
