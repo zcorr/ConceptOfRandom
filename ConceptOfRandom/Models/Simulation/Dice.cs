@@ -2,10 +2,11 @@ using System.Runtime.CompilerServices;
 
 namespace ConceptOfRandom.Models.Simulation;
 
-public class Dice
+public class Dice : IRandomGenerator
 {
     private Random rand = new Random();
     public int sides { get; }
+    private int lastRoll;
 
     public Dice(int sides)
     {   
@@ -17,6 +18,17 @@ public class Dice
 
     public int Roll()
     {
-        return this.rand.Next(1, this.sides + 1);
+        lastRoll = rand.Next(1, this.sides + 1);
+        return lastRoll;
     }
+
+    public override string ToString()
+    {
+        if (lastRoll == 0)
+        {
+            return $"d{sides} hasn't been rolled yet.";
+        }
+
+        return $"d{sides} rolled a {lastRoll}.";
+    }   
 }

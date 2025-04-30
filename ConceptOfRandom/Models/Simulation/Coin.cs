@@ -1,11 +1,29 @@
 namespace ConceptOfRandom.Models.Simulation;
 
-public class Coin : Dice
+public class Coin : IRandomGenerator
 {
-    public Coin() : base(2) { }
+    private Random rand = new Random();
+    
+    public Coin() { }
+    private int lastRoll;
 
-    public string Flip()
+    public int Roll()
     {
-        return Roll() == 1 ? "Heads" : "Tails";
+        lastRoll = rand.Next(1, 3);
+        return lastRoll;
+    }
+
+    public override string ToString()
+    {
+        if (lastRoll == 1)
+        {
+            return "Heads.";
+        }
+        else if (lastRoll == 2)
+        {
+            return "Tails.";
+        }
+        
+        return "Coin hasn't been flipped yet.";
     }
 }
