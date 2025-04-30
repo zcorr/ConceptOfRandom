@@ -1,17 +1,10 @@
 namespace ConceptOfRandom.Models.API;
 
 public class APIClient {
-    private static APIClient instance;
+    private static readonly Lazy<APIClient> LazyInstance = new(() => new APIClient());
     private static HttpClient client;
 
-    public static APIClient Instance
-    {
-        get
-        {
-            if(instance == null) instance = new APIClient();
-            return instance;
-        }
-    }
+    public static APIClient Instance => LazyInstance.Value;
 
     private APIClient() {
         client = new HttpClient();
@@ -19,8 +12,7 @@ public class APIClient {
     
     public async Task<string> Fetch(string url, string parameters) {
         string parameterString = String.IsNullOrWhiteSpace(parameters) ? "" : "?"+parameters;
-        client.BaseAddress = new Uri(url);
-        using HttpResponseMessage response = await client.GetAsync(parameterString);
+        using HttpResponseMessage response = await client.GetAsync(url + parameterString);
         response.EnsureSuccessStatusCode();
         var jsonResponse = await response.Content.ReadAsStringAsync();
         return jsonResponse;
