@@ -3,7 +3,7 @@ namespace ConceptOfRandom.Models.API;
 
 public class RandomCatFacts : APIModel {
     public new readonly string Name = "Cat Facts";
-    private readonly string url = "https://meowfacts.herokuapp.com/";
+    private const string url = "https://meowfacts.herokuapp.com/";
     public new readonly string Parameters;
 
     public class CatFact {
