@@ -9,6 +9,11 @@ public class Deck
     {
         BuildDeck();
     }
+
+    public int GetLength()
+    {
+        return _theDeck.Count;
+    }
     
     public static void BuildDeck()
     {
@@ -25,10 +30,19 @@ public class Deck
     
     public Card DrawCard()
     {
-        int last = _theDeck.Count - 1;
-        Card card = _theDeck[last];
-        _theDeck.RemoveAt(last);
-        return card;
+        if (GetLength() > 0)
+        {
+            int last = _theDeck.Count - 1;
+            Card card = _theDeck[last];
+            _theDeck.RemoveAt(last);
+            return card;
+        }
+        else throw new InvalidOperationException("Deck is empty");
+    }
+
+    public List<Card> CopyOfDeck()
+    {
+        return [.._theDeck];
     }
     public override string ToString()
     {
