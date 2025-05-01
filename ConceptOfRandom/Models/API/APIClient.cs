@@ -11,7 +11,7 @@ public class APIClient {
     }
     
     public async Task<string> Fetch(string url, string parameters) {
-        string parameterString = String.IsNullOrWhiteSpace(parameters) ? "" : "?"+parameters;
+        string parameterString = string.IsNullOrWhiteSpace(parameters) ? "" : "?"+parameters;
         using HttpResponseMessage response = await client.GetAsync(url + parameterString);
         response.EnsureSuccessStatusCode();
         var jsonResponse = await response.Content.ReadAsStringAsync();
