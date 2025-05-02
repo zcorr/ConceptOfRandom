@@ -1,51 +1,41 @@
-namespace ConceptOfRandom;
+namespace ConceptOfRandom.CardGameDir;
 
-public class Deck
+public class Deck : Hand
 {
+    private static readonly Random _rng = new Random();
 
-    static List<Card> _theDeck = new List<Card>();
+    public Deck() : base() => BuildDeck();
 
-    public Deck()
+    public Deck(IEnumerable<Card> cards) : base(cards)
     {
-        BuildDeck();
     }
-
-    public int GetLength()
+    void BuildDeck()
     {
-        return _theDeck.Count;
-    }
-    
-    public static void BuildDeck()
-    {
+        Cards.Clear();
         foreach (Suit suit in Enum.GetValues(typeof(Suit)))
-            foreach (Rank rank in Enum.GetValues(typeof(Rank)))
-                _theDeck.Add(new Card(rank,suit));
+        foreach (Rank rank in Enum.GetValues(typeof(Rank)))
+            Cards.Add(new Card(rank,suit));
     }
 
-    public void ShuffleDeck()
+
+    public void Shuffle()
     {
-        var random = new Random();
-        _theDeck = _theDeck.OrderBy(_ => random.Next()).ToList();
+        var shuffled = Cards.OrderBy(_ => _rng.Next()).ToList();
+        Cards.Clear();
+        Cards.AddRange(shuffled);
     }
-    
+
     public Card DrawCard()
     {
-        if (GetLength() > 0)
-        {
-            int last = _theDeck.Count - 1;
-            Card card = _theDeck[last];
-            _theDeck.RemoveAt(last);
-            return card;
-        }
-        else throw new InvalidOperationException("Deck is empty");
+        if (Count == 0)
+            throw new InvalidOperationException("Deck is empty");
+
+        int lastIndex = Count - 1;
+        var card = Cards[lastIndex];
+        Cards.RemoveAt(lastIndex);
+
+        return card;
     }
 
-    public List<Card> CopyOfDeck()
-    {
-        return [.._theDeck];
-    }
-    public override string ToString()
-    {
-        return string.Join(", ", _theDeck);
-    }
+    public List<Card> ToList() => [..Cards];
 }

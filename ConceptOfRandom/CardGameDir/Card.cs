@@ -1,9 +1,9 @@
-namespace ConceptOfRandom;
+namespace ConceptOfRandom.CardGameDir;
 
 public struct Card(Rank rank,Suit suit)
 {
-    public Rank Rank { get; } = rank;
-    public Suit Suit { get; } = suit;
+    internal Rank Rank { get; } = rank;
+    internal Suit Suit { get; } = suit;
     
     public bool IsFaceUp {get; set;} = true;
     
@@ -11,6 +11,12 @@ public struct Card(Rank rank,Suit suit)
 
     public override string ToString()
     {
-        return IsFaceUp ? $"{Rank} of {Suit}" : "????";
+        return CardDisplay.Current.GetDisplay(this);
     }
+
+
+    // public void SetDisplay(ICardDisplayStrategy displayStrategy)
+    // {
+    //     DisplayStrategy = displayStrategy;
+    // }
 }

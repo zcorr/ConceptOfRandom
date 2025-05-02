@@ -1,73 +1,78 @@
-using System.Net;
 using System.Runtime.CompilerServices;
-using System.Security.Principal;
+using ConceptOfRandom.CardGameDir;
 
-namespace ConceptOfRandom;
+[assembly: InternalsVisibleTo("ConceptOfRandomTests")]
+namespace ConceptOfRandom.BlackjackGameDir;
 
 public class BlackjackGame
 {
-    static readonly List<Card> PlayerCards = new List<Card>();
-    static readonly List<Card> DealerCards = new();
-    static readonly Deck GameDeck = new Deck();
-    static bool _isPlayerWin = false;
-    static readonly GameFunctions _gameFunctions = new GameFunctions();
-
-    public static void BjGameStart()
+    static readonly Hand PlayerCards = new Hand();
+    static readonly Hand DealerCards = new Hand();
+    static readonly Deck GameDeck;
+    
+    public BlackjackGame()
     {
-        Console.WriteLine("Welcome to Blackjack!");
-        BjGameLooper();
+        BjGameStart(DealerCards, PlayerCards);
     }
 
-    static void BjGameLooper()
+    static BlackjackGame()
     {
-        while (true)
-        {
-            GameDeck.ShuffleDeck();
-            PlayerCards.Clear();
-            DealerCards.Clear();
+        GameDeck = new Deck();
+    }
 
-            PlayerCards.Add(GameDeck.DrawCard());
-            PlayerCards.Add(GameDeck.DrawCard());
-
-            DealerCards.Add(GameDeck.DrawCard());
-            Card dealerDownCard = GameDeck.DrawCard();
-            dealerDownCard.IsFaceUp = false;
-            DealerCards.Add(dealerDownCard);
-            BjGameRunner();
-            if (!GameFunctions.IsPlayAgain())
-                break;
-        }
+    static void BjGameStart(Hand dealerCards, Hand playerCards)
+    {
+        Console.WriteLine("Welcome to Blackjack!\n");
+        Console.WriteLine("Choose your display style:");
+        Console.WriteLine("  1) Word Display art");
+        Console.WriteLine("  2) Symbol Display art");
+        var choice = Console.ReadLine();
+        CardDisplay.Current = 
+            choice == "1" ? new WordDisplayStrategy() : new SymbolDisplayStrategy();
         
+        BjGameSetUp(dealerCards, playerCards);
     }
 
-    static void BjGameRunner()
+    static void BjGameSetUp(Hand dealerCards, Hand playerCards)
+    {
+            var gameDeck = new Deck();
+            gameDeck.Shuffle();
+            playerCards.Clear();
+            dealerCards.Clear();
+
+            playerCards.Add(gameDeck.DrawCard());
+            playerCards.Add(gameDeck.DrawCard());
+
+            dealerCards.Add(gameDeck.DrawCard());
+            Card dealerDownCard = gameDeck.DrawCard();
+            dealerDownCard.IsFaceUp = false;
+            dealerCards.Add(dealerDownCard);
+            BjGameRunner(dealerCards, playerCards, gameDeck);
+            if (GameUtilities.IsPlayAgain())
+                BjGameStart(dealerCards, playerCards);
+            else
+                Console.WriteLine("Thanks for playing!");
+    }
+
+    static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
     {
         // Hand error check
-        if(DealerCards.Count < 2 || PlayerCards.Count < 2)
-        {
-            Console.WriteLine("Hand error, not enough cards.");
-            throw new Exception();
-        }
+        if(dealerCards.Count < 2 || playerCards.Count < 2)
+            throw new Exception("Hand error, not enough cards.");
         //
 
         // Player Natural Blackjack
-        if (BjHandValue(PlayerCards) == 21)
+        if (BjHandValue(playerCards) == 21)
         {
             Console.WriteLine("Blackjack!");
-            if (BjHandValue(DealerCards) != 21)
+            if (BjHandValue(dealerCards) != 21 || BjPushCheck(dealerCards,playerCards))
             {
-                DisplayGameEnd();
-                return;
-            }
-            else if (BjPushCheck(DealerCards,PlayerCards))
-            {
-                DisplayGameEnd();
+                DisplayBjGameEnd(dealerCards, playerCards);
                 return;
             }
             else
             {
-                Console.WriteLine("Something strange happend in a natural blackjack...");
-                throw new Exception();
+                throw new Exception("Something strange happened in a natural blackjack (BjGameRunner)...");
             }
         }
         //
@@ -76,39 +81,47 @@ public class BlackjackGame
         // Hit / Stand loop
         while (true)
         {
-            Console.WriteLine("Dealers cards are:");
-            HandManipulationFunctions.printHand(DealerCards);
-            
-            Console.WriteLine("Your cards are:");
-            HandManipulationFunctions.printHand(PlayerCards);
-            
-            
-            
-            Console.WriteLine("Type 1 to Hit, Press ENTER/RETURN to stand");
+            PrintHands(dealerCards, playerCards);
+            Console.WriteLine("Type 1 to Hit, Type 0 to Stand");
             var hitOrStand = Console.ReadLine();
-            if (hitOrStand == "1")
-                PlayerCards.Add(GameDeck.DrawCard());
-            else
+            while (true)
             {
-                break;
+                if (hitOrStand == "1") {
+                    playerCards.Add(gameDeck.DrawCard());
+                    break;
+                }
+                else if (hitOrStand == "0")
+                    goto HitStandLoopBreak;
+                else
+                    Console.WriteLine("Incorrect Input!");
             }
-            
             // Bust or 21
-            if (BjHandValue(PlayerCards) > 21)
-            {
+            if (BjHandValue(playerCards) > 21) {
                 Console.WriteLine("BUST!");
-                DisplayGameEnd();
+                DisplayBjGameEnd(dealerCards, playerCards);
                 return;
             }
-                //
-
         }
+        HitStandLoopBreak:
         //
         
-        BjWinCalculation(DealerCards, PlayerCards, GameDeck);
+        BjWinCalculation(dealerCards, playerCards, gameDeck);
     }
-    
-    static void BjWinCalculation(List<Card> dealerCards, List<Card> playerCards, Deck gameDeck)
+
+    internal static void PrintHands(Hand dealerCards, Hand playerCards)
+    {
+        PrintSingleHand("Dealer's cards:", dealerCards);
+        PrintSingleHand("Your cards:", playerCards);
+    }
+
+    static void PrintSingleHand(string heading, Hand hand)
+    {
+        Console.WriteLine(heading);
+        hand.Print();
+    }
+
+
+    internal static void BjWinCalculation(Hand dealerCards, Hand playerCards, Deck gameDeck)
     {
         int dealerValue = BjHandValue(dealerCards);
         
@@ -120,7 +133,7 @@ public class BlackjackGame
             {
                 if (BjPushCheck(dealerCards, playerCards))
                 {
-                    DisplayGameEnd();
+                    DisplayBjGameEnd(dealerCards, playerCards);
                     return;
                 }
             }
@@ -128,24 +141,20 @@ public class BlackjackGame
         
         if (BjPushCheck(dealerCards, playerCards))
         {
-            DisplayGameEnd();
+            DisplayBjGameEnd(dealerCards, playerCards);
             return;
         }
         
         int playerValue = BjHandValue(playerCards);
+        
         if (dealerValue <= 21 && dealerValue > playerValue)
-        {
             Console.WriteLine("You lose!");
-        }
         else
-        {
             Console.WriteLine("You win!");
-        }
-
-        DisplayGameEnd();
+        DisplayBjGameEnd(dealerCards, playerCards);
     }
 
-    public static int BjHandValue(List<Card> hand)
+    internal static int BjHandValue(Hand hand)
     {
         if (hand.Count <= 1) throw new ArgumentException("Hand is too short, error.");
         int handValue = 0;
@@ -171,7 +180,7 @@ public class BlackjackGame
 
     }
 
-    public static bool BjPushCheck(List<Card> dealerHand, List<Card> playerHand)
+    internal static bool BjPushCheck(Hand dealerHand, Hand playerHand)
     {
         if (BjHandValue(dealerHand) == 21 && BjHandValue(playerHand) == 21)
         {
@@ -180,14 +189,14 @@ public class BlackjackGame
         }
         return false;
     }
-    static void DisplayGameEnd()
+    private static void DisplayBjGameEnd(Hand dealerCards, Hand playerCards)
     {
         Console.WriteLine("Final hands:");
-        HandManipulationFunctions.RevealCards(DealerCards);
-        Console.WriteLine("Dealers cards were:");
-        HandManipulationFunctions.printHand(DealerCards);
-            
+        dealerCards.RevealAll();
+        Console.WriteLine("Dealer's cards were:");
+        dealerCards.Print();
         Console.WriteLine("Your cards were:");
-        HandManipulationFunctions.printHand(PlayerCards);
+        playerCards.Print();
     }
+
 }
