@@ -90,10 +90,10 @@ public class BlackjackGame
                     playerCards.Add(gameDeck.DrawCard());
                     break;
                 }
-                else if (hitOrStand == "0")
-                    goto HitStandLoopBreak;
                 else
-                    Console.WriteLine("Incorrect Input!");
+                {
+                    goto HitStandLoopBreak;
+                }
             }
             // Bust or 21
             if (BjHandValue(playerCards) > 21) {
