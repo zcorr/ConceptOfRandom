@@ -15,8 +15,24 @@ class Program
         while (true)
         {
             if (Console.KeyAvailable)
-                break;
+            {
+                var key = Console.ReadKey(true).Key;
 
+                if ((key == ConsoleKey.Q) || (key == ConsoleKey.D4))
+                {
+                    break;
+                } 
+                if (key == ConsoleKey.D1) {
+                    program.WaveAnimation();
+                }
+                if (key == ConsoleKey.D2) {
+                    program.DiceRoll();
+                }
+                if (key == ConsoleKey.D3) {
+                    program.Blackjack();
+                }
+                
+            }
             program.Tick();
             count++;
         }
