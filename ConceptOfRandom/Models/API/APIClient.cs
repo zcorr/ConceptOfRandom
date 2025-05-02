@@ -14,8 +14,9 @@ public class APIClient {
         string parameterString = string.IsNullOrWhiteSpace(parameters) ? "" : "?"+parameters;
         using HttpResponseMessage response = await client.GetAsync(url + parameterString);
         response.EnsureSuccessStatusCode();
-        var jsonResponse = await response.Content.ReadAsStringAsync();
-        return jsonResponse;
+        var returnResponse = await response.Content.ReadAsStringAsync();
+        return returnResponse;
     }
+    
     
 }
