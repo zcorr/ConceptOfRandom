@@ -6,7 +6,7 @@ public class Dice : IRandomGenerator
 {
     private Random rand = new Random();
     public int sides { get; }
-    private int lastRoll;
+    public int lastRoll { get; set; }
 
     public Dice(int sides)
     {   

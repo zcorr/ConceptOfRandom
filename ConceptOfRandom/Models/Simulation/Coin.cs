@@ -5,7 +5,7 @@ public class Coin : IRandomGenerator
     private Random rand = new Random();
     
     public Coin() { }
-    private int lastRoll;
+    public int lastRoll { get; set; }
 
     public int Roll()
     {
