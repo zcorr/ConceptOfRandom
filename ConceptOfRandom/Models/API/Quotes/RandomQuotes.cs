@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace ConceptOfRandom.Models.API;
 
 public class RandomQuotes : APIModel {
