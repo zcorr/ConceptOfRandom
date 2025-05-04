@@ -54,60 +54,7 @@ public class BlackjackGame
                 BjGameStart(dealerCards, playerCards);
     }
 
-    // static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
-    // {
-    //     // Hand error check
-    //     if(dealerCards.Count < 2 || playerCards.Count < 2)
-    //         throw new Exception("Hand error, not enough cards.");
-    //     //
-    //
-    //     // Player Natural Blackjack
-    //     if (BjHandValue(playerCards) == 21)
-    //     {
-    //         Console.WriteLine("Blackjack!");
-    //         if (BjHandValue(dealerCards) != 21 || BjPushCheck(dealerCards,playerCards))
-    //         {
-    //             DisplayBjGameEnd(dealerCards, playerCards);
-    //             return;
-    //         }
-    //         else
-    //         {
-    //             throw new Exception("Something strange happened in a natural blackjack (BjGameRunner)...");
-    //         }
-    //     }
-    //     //
-    //     
-    //     
-    //     // Hit / Stand loop
-    //     while (true)
-    //     {
-    //         PrintHands(dealerCards, playerCards);
-    //         Console.WriteLine("Type 1 to Hit, Type 0 to Stand");
-    //         var hitOrStand = Console.ReadLine();
-    //         while (true)
-    //         {
-    //             if (hitOrStand == "1") {
-    //                 playerCards.Add(gameDeck.DrawCard());
-    //                 break;
-    //             }
-    //             else
-    //             {
-    //                 goto HitStandLoopBreak;
-    //             }
-    //         }
-    //         // Bust or 21
-    //         if (BjHandValue(playerCards) > 21) {
-    //             Console.WriteLine("BUST!");
-    //             DisplayBjGameEnd(dealerCards, playerCards);
-    //             return;
-    //         }
-    //     }
-    //     HitStandLoopBreak:
-    //     //
-    //     
-    //     BjWinCalculation(dealerCards, playerCards, gameDeck);
-    // }
-    
+    //Thank you bot for helping with the refactoring
     internal static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
     {
         // …Natural-BJ check stays unchanged…
