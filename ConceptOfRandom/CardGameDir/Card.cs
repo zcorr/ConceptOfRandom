@@ -13,10 +13,4 @@ public struct Card(Rank rank,Suit suit)
     {
         return CardDisplay.Current.GetDisplay(this);
     }
-
-
-    // public void SetDisplay(ICardDisplayStrategy displayStrategy)
-    // {
-    //     DisplayStrategy = displayStrategy;
-    // }
 }

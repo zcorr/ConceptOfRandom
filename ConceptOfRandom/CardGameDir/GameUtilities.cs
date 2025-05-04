@@ -1,26 +1,25 @@
 namespace ConceptOfRandom.CardGameDir;
-public  class GameUtilities
+public abstract class GameUtilities
 {
-    public static bool IsPlayAgain()
+    public static bool IsPlayAgain(Func<string?> readLine, Action<string> writeLine)
     {
-        Console.WriteLine("Would you like to play again? (Y/N)");
-        string? playAgain = Console.ReadLine();
-
+        string? input = readLine();
         
-        if (playAgain == "Y")
+        if (input == "Y")
         {
-            Console.WriteLine("Game starting...");
+            writeLine("Game starting...");
             return true;
         }
-        else if (playAgain == "N")
+        else if (input == "N")
         {
-            Console.WriteLine("Thanks for playing!");
+            writeLine("Thanks for playing!");
             return false;
         }
         else
         {
-            Console.WriteLine("Incorrect Input!");
-            return IsPlayAgain();
+            writeLine("Incorrect Input!");
+            writeLine("Would you like to play again? (Y/N)");
+            return IsPlayAgain(readLine, writeLine);
         }
     }
 }

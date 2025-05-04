@@ -48,76 +48,134 @@ public class BlackjackGame
             dealerDownCard.IsFaceUp = false;
             dealerCards.Add(dealerDownCard);
             BjGameRunner(dealerCards, playerCards, gameDeck);
-            if (GameUtilities.IsPlayAgain())
+
+            Console.WriteLine("Would you like to play again? (Y/N)");
+            if (GameUtilities.IsPlayAgain(Console.ReadLine, Console.WriteLine))
                 BjGameStart(dealerCards, playerCards);
-            else
-                Console.WriteLine("Thanks for playing!");
     }
 
-    static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    // static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    // {
+    //     // Hand error check
+    //     if(dealerCards.Count < 2 || playerCards.Count < 2)
+    //         throw new Exception("Hand error, not enough cards.");
+    //     //
+    //
+    //     // Player Natural Blackjack
+    //     if (BjHandValue(playerCards) == 21)
+    //     {
+    //         Console.WriteLine("Blackjack!");
+    //         if (BjHandValue(dealerCards) != 21 || BjPushCheck(dealerCards,playerCards))
+    //         {
+    //             DisplayBjGameEnd(dealerCards, playerCards);
+    //             return;
+    //         }
+    //         else
+    //         {
+    //             throw new Exception("Something strange happened in a natural blackjack (BjGameRunner)...");
+    //         }
+    //     }
+    //     //
+    //     
+    //     
+    //     // Hit / Stand loop
+    //     while (true)
+    //     {
+    //         PrintHands(dealerCards, playerCards);
+    //         Console.WriteLine("Type 1 to Hit, Type 0 to Stand");
+    //         var hitOrStand = Console.ReadLine();
+    //         while (true)
+    //         {
+    //             if (hitOrStand == "1") {
+    //                 playerCards.Add(gameDeck.DrawCard());
+    //                 break;
+    //             }
+    //             else
+    //             {
+    //                 goto HitStandLoopBreak;
+    //             }
+    //         }
+    //         // Bust or 21
+    //         if (BjHandValue(playerCards) > 21) {
+    //             Console.WriteLine("BUST!");
+    //             DisplayBjGameEnd(dealerCards, playerCards);
+    //             return;
+    //         }
+    //     }
+    //     HitStandLoopBreak:
+    //     //
+    //     
+    //     BjWinCalculation(dealerCards, playerCards, gameDeck);
+    // }
+    
+    internal static void BjGameRunner(Hand dealerCards, Hand playerCards, Deck gameDeck)
     {
-        // Hand error check
-        if(dealerCards.Count < 2 || playerCards.Count < 2)
-            throw new Exception("Hand error, not enough cards.");
-        //
+        // …Natural-BJ check stays unchanged…
 
-        // Player Natural Blackjack
-        if (BjHandValue(playerCards) == 21)
-        {
-            Console.WriteLine("Blackjack!");
-            if (BjHandValue(dealerCards) != 21 || BjPushCheck(dealerCards,playerCards))
-            {
-                DisplayBjGameEnd(dealerCards, playerCards);
-                return;
-            }
-            else
-            {
-                throw new Exception("Something strange happened in a natural blackjack (BjGameRunner)...");
-            }
-        }
-        //
-        
-        
-        // Hit / Stand loop
+        // ---------- Hit / Stand loop ----------
         while (true)
         {
             PrintHands(dealerCards, playerCards);
-            Console.WriteLine("Type 1 to Hit, Type 0 to Stand");
-            var hitOrStand = Console.ReadLine();
-            while (true)
+
+            // ⇢  NEW: stop prompting if the player already has 21
+            if (BjHandValue(playerCards) == 21)
             {
-                if (hitOrStand == "1") {
-                    playerCards.Add(gameDeck.DrawCard());
-                    break;
-                }
-                else
-                {
-                    goto HitStandLoopBreak;
-                }
+                Console.WriteLine("21! You stand automatically.");
+                break;                          // jump to dealer’s turn
             }
-            // Bust or 21
-            if (BjHandValue(playerCards) > 21) {
-                Console.WriteLine("BUST!");
-                DisplayBjGameEnd(dealerCards, playerCards);
-                return;
+
+            Console.WriteLine("Type 1 to Hit, 0 to Stand");
+            var choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                playerCards.Add(gameDeck.DrawCard());
+
+                var value = BjHandValue(playerCards);
+                if (value > 21)
+                {
+                    Console.WriteLine("BUST!");
+                    DisplayBjGameEnd(dealerCards, playerCards);
+                    return;                     // game over
+                }
+
+                if (value == 21)                // hit to exactly 21
+                {
+                    Console.WriteLine("21! You stand automatically.");
+                    break;                      // dealer’s turn
+                }
+
+                // otherwise loop again
+            }
+            else   // user chose Stand (or anything other than "1")
+            {
+                break;
             }
         }
-        HitStandLoopBreak:
-        //
-        
+        // ---------- dealer’s turn / outcome ----------
         BjWinCalculation(dealerCards, playerCards, gameDeck);
     }
 
-    internal static void PrintHands(Hand dealerCards, Hand playerCards)
+
+    internal static string PrintHands(Hand dealerCards, Hand playerCards)
     {
-        PrintSingleHand("Dealer's cards:", dealerCards);
-        PrintSingleHand("Your cards:", playerCards);
+        // Each helper call writes its own heading + hand to the console
+        // and returns the hand text.
+        var dealerHandText = PrintSingleHand("Dealer's cards:", dealerCards);
+        var playerHandText = PrintSingleHand("Your cards:",    playerCards);
+
+        // Return the concatenation of the two hand strings (no extra newlines).
+        return dealerHandText + playerHandText;
     }
 
-    static void PrintSingleHand(string heading, Hand hand)
+    internal static string PrintSingleHand(string heading, Hand hand)
     {
-        Console.WriteLine(heading);
-        hand.Print();
+        var handText = hand.ToString();          // e.g. “Two♠  Three♠”
+
+        Console.WriteLine(heading);              // “Dealer's cards:”
+        Console.WriteLine(handText);             // “Two♠  Three♠”
+
+        return handText;                         // caller can use it if needed
     }
 
 
@@ -146,7 +204,6 @@ public class BlackjackGame
         }
         
         int playerValue = BjHandValue(playerCards);
-        
         if (dealerValue <= 21 && dealerValue > playerValue)
             Console.WriteLine("You lose!");
         else
@@ -189,14 +246,16 @@ public class BlackjackGame
         }
         return false;
     }
-    private static void DisplayBjGameEnd(Hand dealerCards, Hand playerCards)
+    static string DisplayBjGameEnd(Hand dealerCards, Hand playerCards)
     {
-        Console.WriteLine("Final hands:");
         dealerCards.RevealAll();
-        Console.WriteLine("Dealer's cards were:");
-        dealerCards.Print();
-        Console.WriteLine("Your cards were:");
-        playerCards.Print();
+        var output = "";
+        output += "Final hands:\n";
+        output += "Dealer's cards were:\n";
+        output += dealerCards+"\n";
+        output += "Your cards were:\n";
+        output += playerCards+"\n";
+        Console.WriteLine(output);
+        return output;
     }
-
 }

@@ -36,9 +36,11 @@ public class Hand : IEnumerable
         }
     }
 
-    public void Print()
+    public string Print()
     {
-        Console.WriteLine(this);
+        var output = string.Join(Environment.NewLine,Cards.Select(c => c.ToString()));
+        Console.WriteLine(output);
+        return output;
     }
 
     public IEnumerator GetEnumerator() => Cards.GetEnumerator();
