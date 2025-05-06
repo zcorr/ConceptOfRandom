@@ -18,6 +18,8 @@ class Program
             {
                 var key = Console.ReadKey(true).Key;
 
+                program.HandleInput(key);
+                
                 if ((key == ConsoleKey.Q) || (key == ConsoleKey.D4))
                 {
                     break;

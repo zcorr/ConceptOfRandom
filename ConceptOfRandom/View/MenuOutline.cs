@@ -6,6 +6,7 @@ public class MenuOutline : IConsoleCanvas{
 	private ConsoleCanvas _canvas = new ConsoleCanvas();
 	private double _framerate = 30;
 	private DateTime _previousframe = DateTime.Now;
+	private int _selectedIndex = 0; // Track the currently selected menu item
 
 	
 	public void Render() {
@@ -15,19 +16,18 @@ public class MenuOutline : IConsoleCanvas{
 	public void Tick() {
 		_canvas.Clear();
 		_canvas.CreateBorder();
-		
-		// Initial Title Screen
 
+		// Initial Title Screen
 		var title = "Concept of Random";
 		var titleX = (_canvas.Width - title.Length) / 2;
 		var titleY = 1;
 		_canvas.Text(titleX, titleY, title);
-		
+
 		var subtitle = "Press the corresponding number to play the game";
 		var subtitleX = (_canvas.Width - subtitle.Length) / 2;
-		var subtitleY = 2;
+		var subtitleY = 3;
 		_canvas.Text(subtitleX, subtitleY, subtitle);
-		
+
 		// Game List Menu
 		var menuOptions = new string[] {
 			"1. Wave Animation",
@@ -36,14 +36,26 @@ public class MenuOutline : IConsoleCanvas{
 			"4. Exit"
 		};
 		var menuX = (_canvas.Width - menuOptions[0].Length) / 2;
-		var menuY = 3;
+		var menuY = 5;
+
 		for (int i = 0; i < menuOptions.Length; i++) {
+			if (i == _selectedIndex) {
+				// Draw a rectangle around the selected item
+				_canvas.CreateRectangle(menuX - 1, menuY + i, menuOptions[i].Length + 2, 1);
+			}
 			_canvas.Text(menuX, menuY + i, menuOptions[i]);
 		}
 
 		_canvas.AutoResize = true;
 		_canvas.Render();
-		
+	}
+
+	public void HandleInput(ConsoleKey key) {
+		if (key == ConsoleKey.UpArrow) {
+			_selectedIndex = (_selectedIndex - 1 + 4) % 4; // Wrap around to the last item
+		} else if (key == ConsoleKey.DownArrow) {
+			_selectedIndex = (_selectedIndex + 1) % 4; // Wrap around to the first item
+		}
 	}
 
 	public void CreateBorder() {
