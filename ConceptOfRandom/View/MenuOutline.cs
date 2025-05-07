@@ -5,9 +5,8 @@ public class MenuOutline : IConsoleCanvas{
 	// Instance variable of our console renderer
 	private ConsoleCanvas _canvas = new ConsoleCanvas();
 	private double _framerate = 30;
-	private DateTime _previousframe = DateTime.Now;
 	private int _selectedIndex = 0; // Track the currently selected menu item
-
+	
 	
 	public void Render() {
 		_canvas.Render();
@@ -23,7 +22,7 @@ public class MenuOutline : IConsoleCanvas{
 		var titleY = 1;
 		_canvas.Text(titleX, titleY, title);
 
-		var subtitle = "Press the corresponding number to play the game";
+		var subtitle = "Up / Down arrows to navigate, Enter to select";
 		var subtitleX = (_canvas.Width - subtitle.Length) / 2;
 		var subtitleY = 3;
 		_canvas.Text(subtitleX, subtitleY, subtitle);
@@ -55,6 +54,21 @@ public class MenuOutline : IConsoleCanvas{
 			_selectedIndex = (_selectedIndex - 1 + 4) % 4; // Wrap around to the last item
 		} else if (key == ConsoleKey.DownArrow) {
 			_selectedIndex = (_selectedIndex + 1) % 4; // Wrap around to the first item
+		} else if (key == ConsoleKey.Enter) {
+			switch (_selectedIndex) {
+				case 0:
+					WaveAnimation();
+					break;
+				case 1:
+					DiceRoll();
+					break;
+				case 2:
+					Blackjack();
+					break;
+				case 3:
+					Environment.Exit(0);
+					break;
+			}
 		}
 	}
 
