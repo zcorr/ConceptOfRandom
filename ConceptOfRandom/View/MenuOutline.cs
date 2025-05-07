@@ -85,7 +85,7 @@ public class MenuOutline : IConsoleCanvas{
 		_canvas.Clear();
 	}
 
-	public void WaveAnimation() {
+	private void WaveAnimation() {
 		// Initial Text string and position (centered and at 1 for title)
 		var waveText = "Wave Animation!";
 		var titleText = "Concept of Random";
