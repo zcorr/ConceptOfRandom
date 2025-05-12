@@ -51,10 +51,13 @@ public class MenuOutline : IConsoleCanvas{
 
 	public void HandleInput(ConsoleKey key) {
 		if (key == ConsoleKey.UpArrow) {
+			Console.Beep(1000, 100);
 			_selectedIndex = (_selectedIndex - 1 + 4) % 4; // Wrap around to the last item
 		} else if (key == ConsoleKey.DownArrow) {
+			Console.Beep(600, 100);
 			_selectedIndex = (_selectedIndex + 1) % 4; // Wrap around to the first item
 		} else if (key == ConsoleKey.Enter) {
+			Console.Beep(800, 200);
 			switch (_selectedIndex) {
 				case 0:
 					WaveAnimation();
@@ -87,6 +90,10 @@ public class MenuOutline : IConsoleCanvas{
 
 	private void WaveAnimation() {
 		// Initial Text string and position (centered and at 1 for title)
+		var pacManThread = new Thread(TetrisTheme);
+		pacManThread.Start();
+		
+		
 		var waveText = "Wave Animation!";
 		var titleText = "Concept of Random";
 		var waveTextX = (_canvas.Width - waveText.Length) / 2;
@@ -117,6 +124,32 @@ public class MenuOutline : IConsoleCanvas{
 			_canvas.AutoResize = true;
 			_canvas.Render();
 			System.Threading.Thread.Sleep(100); // Adjust delay for smoother animation
+		}
+		pacManThread.Join();
+	}
+
+	private void TetrisTheme()
+	{
+		int[] notes = new int[] {
+			659, 494, 523, 587, 523, 494, 440, 440,
+			523, 659, 587, 523, 494, 523, 587, 659,
+			523, 440, 440, 659, 494, 523, 587, 523,
+			494, 440, 440, 523, 659, 587, 523, 494,
+			523, 587, 659, 523, 440, 440
+		};
+
+		int[] durations = new int[] {
+			200, 200, 200, 400, 200, 200, 400, 200,
+			200, 400, 200, 200, 600, 200, 400, 400,
+			400, 400, 200, 200, 200, 200, 400, 200,
+			200, 400, 200, 200, 400, 200, 200, 600,
+			200, 400, 400, 400, 400, 400
+		};
+
+		for (int i = 0; i < notes.Length; i++)
+		{
+			Console.Beep(notes[i], durations[i]);
+			Thread.Sleep(50); // Short pause between notes
 		}
 	}
 
