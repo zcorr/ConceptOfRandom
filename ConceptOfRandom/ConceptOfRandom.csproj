@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <Folder Include="Models\API\" />
-      <Folder Include="Models\Simulation\" />
     </ItemGroup>
 
 </Project>
