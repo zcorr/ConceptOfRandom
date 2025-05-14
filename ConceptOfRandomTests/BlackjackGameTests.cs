@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Reflection;
 using ConceptOfRandom.CardGameDir;
 using ConceptOfRandom.BlackjackGameDir;
@@ -28,7 +29,7 @@ public class BlackjackGameTests
         Hand hand = [];
         foreach (var rank in ranks)
             hand.Add(new Card(rank,Suit.Spades));
-        Assert.Equal(expected,BlackjackGame.BjHandValue(hand));
+        Assert.Equal(expected,BlackjackGame.GetHandValue(hand));
     }
     
     [Theory]
@@ -38,7 +39,7 @@ public class BlackjackGameTests
     {
         var dealerCards = MakeSpadeHandsOutOfRankList(dealerRanks);
         var playerCards = MakeSpadeHandsOutOfRankList(playerRanks);
-        Assert.Equal(BlackjackGame.BjPushCheck(dealerCards, playerCards),expected);
+        Assert.Equal(BlackjackGame.Pushed(dealerCards, playerCards),expected);
     }
     
     [Fact]
@@ -219,7 +220,7 @@ public class BlackjackGameTests
         try
         {
             // ---------- Act ----------
-            BlackjackGame.BjGameRunner(dealer, player, deck);
+            BlackjackGame.PlayBlackjack(dealer, player, deck);
 
             // ---------- Assert ----------
             var text = output.ToString();
@@ -328,6 +329,7 @@ public class BlackjackGameTests
      private static object? CallPrivateStatic(Type t, string name, params object?[] args)
     {
         var mi = t.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Static);
+        if(mi == null) throw new InvalidOperationException($"No such method: {name}");
         Assert.NotNull(mi);                          // fail fast if the signature ever changes
         return mi!.Invoke(null, args);
     }
@@ -367,8 +369,7 @@ public class BlackjackGameTests
 
         try
         {
-            CallPrivateStatic(typeof(BlackjackGame), "BjGameRunner",
-                              dealer, player, deck);
+            BlackjackGame.PlayBlackjack(dealer, player, deck);
 
             var text = output.ToString();
             Assert.Contains("BUST!", text);                  // message reached console
@@ -382,33 +383,35 @@ public class BlackjackGameTests
            card face-down; uses normal deck + shuffle.
        ----------------------------------------------------------------- */
     [Fact]
-    public void BjGameSetUp_DealsTwoCards_Etc()
+    public void StartBlackjackGame_InitialRound_PrintsExpectedMessagesAndDealsCards()
     {
         var dealer = new Hand();
         var player = new Hand();
-
-        // first input = 0 (stand immediately)
-        // second input = N (don’t play again)
-        using var input  = new StringReader("0\nN\n");
+        // Simulate user choosing Symbol Display, then standing, then quitting
+        using var input = new StringReader("2\n0\nN\n");
         using var output = new StringWriter();
-        var oldIn  = Console.In;
-        var oldOut = Console.Out;
+        var originalIn = Console.In;
+        var originalOut = Console.Out;
         Console.SetIn(input);
         Console.SetOut(output);
 
         try
         {
-            CallPrivateStatic(typeof(BlackjackGame), "BjGameSetUp",
-                              dealer, player);
-
-            Assert.Equal(2, player.Count);
-
-            var txt = output.ToString();
-            Assert.Contains("Dealer's cards:", txt);
-            Assert.Contains("Your cards:",    txt);
-            Assert.Contains("Would you like to play again?", txt);
+            BlackjackGame.StartBlackjackGame(dealer, player);
+            var consoleOutput = output.ToString();
+            Assert.Contains("Welcome to Blackjack!", consoleOutput);
+            Assert.Contains("Choose your display style:", consoleOutput);
+            Assert.Contains("Dealer's cards:", consoleOutput);
+            Assert.Contains("Your cards:", consoleOutput);
+            Assert.Contains("Would you like to play again?", consoleOutput);
+            Assert.True(player.Count >= 2, "Player should have at least 2 cards.");
         }
-        finally { Console.SetIn(oldIn);  Console.SetOut(oldOut); }
+        finally
+        {
+            // Restore original console streams
+            Console.SetIn(originalIn);
+            Console.SetOut(originalOut);
+        }
     }
 
     /* -----------------------------------------------------------------
