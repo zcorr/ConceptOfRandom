@@ -1,8 +1,12 @@
 using System.Runtime.CompilerServices;
-using ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
 [assembly: InternalsVisibleTo("ConceptOfRandomTests")]
-namespace ConceptOfRandom.BlackjackGameDir;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack;
 
 public class BlackjackGame
 {

@@ -1,4 +1,5 @@
-using ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
 namespace ConceptOfRandomTests;
 

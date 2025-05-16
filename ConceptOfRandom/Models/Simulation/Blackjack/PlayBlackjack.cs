@@ -1,4 +1,4 @@
-﻿namespace ConceptOfRandom.BlackjackGameDir;
+﻿namespace ConceptOfRandom.Models.Simulation.Blackjack;
 
 class PlayBlackjack
 {

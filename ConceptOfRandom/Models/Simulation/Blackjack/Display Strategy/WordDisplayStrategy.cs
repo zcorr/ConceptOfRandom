@@ -1,4 +1,6 @@
-namespace ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 public class WordDisplayStrategy : ICardDisplayStrategy
 {
     public string GetDisplay(Card card)

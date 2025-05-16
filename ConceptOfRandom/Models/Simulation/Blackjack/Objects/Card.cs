@@ -1,4 +1,7 @@
-namespace ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 
 public struct Card(Rank rank,Suit suit)
 {

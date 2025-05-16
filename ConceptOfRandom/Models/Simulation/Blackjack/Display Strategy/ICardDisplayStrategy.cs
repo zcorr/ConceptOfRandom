@@ -1,4 +1,6 @@
-namespace ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 
 public interface ICardDisplayStrategy
 {

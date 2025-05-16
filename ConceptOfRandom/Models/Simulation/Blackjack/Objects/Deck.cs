@@ -1,4 +1,6 @@
-namespace ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 
 public class Deck : Hand
 {

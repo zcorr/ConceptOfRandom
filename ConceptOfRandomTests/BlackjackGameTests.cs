@@ -1,7 +1,10 @@
 using System.ComponentModel;
 using System.Reflection;
-using ConceptOfRandom.CardGameDir;
-using ConceptOfRandom.BlackjackGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack;
+using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
 namespace ConceptOfRandomTests;
 
 public class BlackjackGameTests
