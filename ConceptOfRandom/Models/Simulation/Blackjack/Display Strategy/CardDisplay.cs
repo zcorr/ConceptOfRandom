@@ -1,4 +1,4 @@
-namespace ConceptOfRandom.CardGameDir;
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 
 public static class CardDisplay
 {

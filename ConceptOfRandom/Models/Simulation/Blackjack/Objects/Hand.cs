@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace ConceptOfRandom.CardGameDir;
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 
 public class Hand : IEnumerable
 {

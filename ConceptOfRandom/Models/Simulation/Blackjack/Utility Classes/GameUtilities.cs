@@ -1,4 +1,5 @@
-namespace ConceptOfRandom.CardGameDir;
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
 public abstract class GameUtilities
 {
     public static bool IsPlayAgain(Func<string?> readLine, Action<string> writeLine)

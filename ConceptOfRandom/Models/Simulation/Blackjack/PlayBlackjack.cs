@@ -1,6 +1,6 @@
-﻿namespace ConceptOfRandom.BlackjackGameDir;
+﻿namespace ConceptOfRandom.Models.Simulation.Blackjack;
 
-class RunBjProgram
+class PlayBlackjack
 {
     static void Main(string[] args)
     {

@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using ConceptOfRandom;
-using ConceptOfRandom.CardGameDir;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 
 namespace ConceptOfRandomTests;
 
