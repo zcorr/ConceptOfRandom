@@ -7,4 +7,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\API\" />
+      <Folder Include="Models\Simulation\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ConsoleRenderer" Version="0.7.1" />
+    </ItemGroup>
+
 </Project>
