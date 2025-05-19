@@ -8,6 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Models\API\" />
+      <Folder Include="Models\Simulation\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ConsoleRenderer" Version="0.7.1" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Update="Models\API\Weather\WeatherLocations.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
