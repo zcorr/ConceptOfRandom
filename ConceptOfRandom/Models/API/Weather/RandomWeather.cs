@@ -11,16 +11,16 @@ public class RandomWeather : APIModel {
     public class WeatherForecast
     {
         [JsonPropertyName("temperature")]
-        public string Temperature { get; set; }
+        public string Temperature { get; init; }
 
         [JsonPropertyName("wind")]
-        public string Wind { get; set; }
+        public string Wind { get; init; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string Description { get; init; }
 
         [JsonPropertyName("forecast")]
-        public List<ForecastDay> Forecast { get; set; }
+        public List<ForecastDay> Forecast { get; init; }
     }
 
     public class ForecastDay
@@ -33,9 +33,6 @@ public class RandomWeather : APIModel {
 
         [JsonPropertyName("wind")]
         public string Wind { get; set; }
-        
-        [JsonPropertyName("forecast")]
-        public List<ForecastDay> Forecasts { get; set; }
     }
 
     

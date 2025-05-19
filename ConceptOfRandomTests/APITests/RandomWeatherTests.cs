@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text.Json;
 using ConceptOfRandom.Models.API;
 using Xunit.Abstractions;
 
@@ -34,5 +36,25 @@ public class RandomWeatherTests(ITestOutputHelper output) {
     public void CanGetRandomWeatherLocationFromFile() {
         output.WriteLine(LocationReader.GetRandomLocationFromFile());
         Assert.NotNull(LocationReader.GetRandomLocationFromFile());
+    }
+
+    [Fact]
+    public async void CanGetRandomWeatherDetails() {
+        try {
+            string response = await APIClient.Instance.Fetch("https://goweather.xyz/weather/moraga", "");
+            RandomWeather.WeatherForecast forecast =
+                JsonSerializer.Deserialize<RandomWeather.WeatherForecast>(response)!;
+            Assert.NotNull(forecast.Temperature);
+            Assert.NotNull(forecast.Wind);
+            Assert.NotNull(forecast.Description);
+            Assert.NotNull(forecast.Forecast);
+            RandomWeather.ForecastDay day = forecast.Forecast[0];
+            Assert.NotNull(day.Temperature);
+            Assert.NotNull(day.Wind);
+            Assert.NotNull(day.Day);
+        }
+        catch (Exception e) {
+            Assert.Fail($"Failed with exception {e.Message}");
+        }
     }
 }
