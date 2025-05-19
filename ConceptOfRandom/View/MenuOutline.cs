@@ -1,66 +1,42 @@
+using System.Reflection;
+
 namespace ConceptOfRandom.view;
 using ConsoleRenderer;
 
 public class MenuOutline : IConsoleCanvas{
 	// Instance variable of our console renderer
-	private ConsoleCanvas _canvas = new ConsoleCanvas();
+	private ConsoleCanvas canvas = new ConsoleCanvas();
 	private double _framerate = 30;
 	private int _selectedIndex = 0; // Track the currently selected menu item
 	
 	
 	public void Render() {
-		_canvas.Render();
+		canvas.Render();
 	}
 
 	public void Tick() {
-		_canvas.Clear();
-		_canvas.CreateBorder();
-
-		// Initial Title Screen
-		var title = "Concept of Random";
-		var titleX = (_canvas.Width - title.Length) / 2;
-		var titleY = 1;
-		_canvas.Text(titleX, titleY, title);
-
-		var subtitle = "Up / Down arrows to navigate, Enter to select";
-		var subtitleX = (_canvas.Width - subtitle.Length) / 2;
-		var subtitleY = 3;
-		_canvas.Text(subtitleX, subtitleY, subtitle);
-
-		// Game List Menu
-		var menuOptions = new string[] {
-			"1. Wave Animation",
-			"2. Dice Roll",
-			"3. Blackjack",
-			"4. Exit"
-		};
-		var menuX = (_canvas.Width - menuOptions[0].Length) / 2;
-		var menuY = 5;
-
-		for (int i = 0; i < menuOptions.Length; i++) {
-			if (i == _selectedIndex) {
-				// Draw a rectangle around the selected item
-				_canvas.CreateRectangle(menuX - 1, menuY + i, menuOptions[i].Length + 2, 1);
-			}
-			_canvas.Text(menuX, menuY + i, menuOptions[i]);
-		}
-
-		_canvas.AutoResize = true;
-		_canvas.Render();
+		canvas.Clear();
+		canvas.CreateBorder();
+		
+		MakeTitle();
+		
+		canvas.AutoResize = true;
+		canvas.Render();
 	}
 
 	public void HandleInput(ConsoleKey key) {
 		if (key == ConsoleKey.UpArrow) {
-			Console.Beep(1000, 100);
+			//Console.Beep(1000, 100);
 			_selectedIndex = (_selectedIndex - 1 + 4) % 4; // Wrap around to the last item
 		} else if (key == ConsoleKey.DownArrow) {
-			Console.Beep(600, 100);
+			//Console.Beep(600, 100);
 			_selectedIndex = (_selectedIndex + 1) % 4; // Wrap around to the first item
 		} else if (key == ConsoleKey.Enter) {
-			Console.Beep(800, 200);
+			//Console.Beep(800, 200);
 			switch (_selectedIndex) {
 				case 0:
-					WaveAnimation();
+					// Start the wave animation
+					new WaveAnimation().Wave();
 					break;
 				case 1:
 					DiceRoll();
@@ -76,89 +52,67 @@ public class MenuOutline : IConsoleCanvas{
 	}
 
 	public void CreateBorder() {
-		_canvas.CreateBorder();
+		canvas.CreateBorder();
 	}
 	
 	public bool AutoResize {
-		get => _canvas.AutoResize;
-		set => _canvas.AutoResize = value;
+		get => canvas.AutoResize;
+		set => canvas.AutoResize = value;
 	}
 	
 	public void Clear() {
-		_canvas.Clear();
+		canvas.Clear();
 	}
 
-	private void WaveAnimation() {
-		// Initial Text string and position (centered and at 1 for title)
-		var pacManThread = new Thread(TetrisTheme);
-		pacManThread.Start();
-		
-		
-		var waveText = "Wave Animation!";
-		var titleText = "Concept of Random";
-		var waveTextX = (_canvas.Width - waveText.Length) / 2;
-		var titleTextX = (_canvas.Width - titleText.Length) / 2;
-		var titleTextY = 1;
-		
-		var startTime = DateTime.Now;
-		
-		
-		var amplitude = 1.5; // Height of the oscillation
-		var frequency = 0.2; // Speed of the oscillation
-		var wavePeriod = (2 * Math.PI) / frequency; // Duration of one full wave cycle
-		var waveDuration = TimeSpan.FromSeconds(wavePeriod);
-
-		while ((DateTime.Now - startTime) < waveDuration) {
-			var currentTime = DateTime.Now;
-			_canvas.Clear();
-			_canvas.CreateBorder();
-			_canvas.Text(titleTextX, titleTextY, titleText);
-
-			// Render each letter at its calculated vertical position
-			for (int i = 0; i < waveText.Length; i++) {
-				int x = waveTextX + i;
-				int y = (int)(Math.Sin((i * frequency) + (currentTime.Ticks / 10000000.0)) * amplitude + 4); // Single wave
-				_canvas.Set(x, y, waveText[i], ConsoleColor.White, ConsoleColor.Black);
-			}
-
-			_canvas.AutoResize = true;
-			_canvas.Render();
-			System.Threading.Thread.Sleep(100); // Adjust delay for smoother animation
-		}
-		pacManThread.Join();
-	}
-
-	private void TetrisTheme()
-	{
-		int[] notes = new int[] {
-			659, 494, 523, 587, 523, 494, 440, 440,
-			523, 659, 587, 523, 494, 523, 587, 659,
-			523, 440, 440, 659, 494, 523, 587, 523,
-			494, 440, 440, 523, 659, 587, 523, 494,
-			523, 587, 659, 523, 440, 440
-		};
-
-		int[] durations = new int[] {
-			200, 200, 200, 400, 200, 200, 400, 200,
-			200, 400, 200, 200, 600, 200, 400, 400,
-			400, 400, 200, 200, 200, 200, 400, 200,
-			200, 400, 200, 200, 400, 200, 200, 600,
-			200, 400, 400, 400, 400, 400
-		};
-
-		for (int i = 0; i < notes.Length; i++)
-		{
-			Console.Beep(notes[i], durations[i]);
-			Thread.Sleep(50); // Short pause between notes
-		}
+	public ConsoleCanvas GetCanvas() {
+		return canvas;
 	}
 
 	/**
 	 * THESE TWO METHODS BELOW WILL BE THE GAME METHODS THAT WILL BE INTEGRATED ONCE WE HAVE THE CODE MERGED
 	 */
 	public void DiceRoll() {
+		MakeTitle();
+		
 	}
 	
 	public void Blackjack() {
 	}
+
+	protected void MakeTitle() {
+		Clear();
+		CreateBorder();
+		
+		// Initial Title Screen
+		var title = "Concept of Random";
+		var titleX = (canvas.Width - title.Length) / 2;
+		var titleY = 1;
+		canvas.Text(titleX, titleY, title);
+
+		var subtitle = "Up / Down arrows to navigate, Enter to select";
+		var subtitleX = (canvas.Width - subtitle.Length) / 2;
+		var subtitleY = 3;
+		canvas.Text(subtitleX, subtitleY, subtitle);
+
+		// Game List Menu
+		Span<string> menuOptions = [
+			"1. Wave Animation",
+			"2. Dice Roll",
+			"3. Blackjack",
+			"4. Exit"
+		];
+		
+		var menuX = (canvas.Width - menuOptions[0].Length) / 2;
+		var menuY = 5;
+		
+		for (int i = 0; i < menuOptions.Length; i++) {
+			if (i == _selectedIndex) {
+				// Draw a rectangle around the selected item
+				canvas.CreateRectangle(menuX - 1, menuY + i, menuOptions[i].Length + 2, 1);
+			}
+			canvas.Text(menuX, menuY + i, menuOptions[i]);
+		}
+		
+	}
+
 }
