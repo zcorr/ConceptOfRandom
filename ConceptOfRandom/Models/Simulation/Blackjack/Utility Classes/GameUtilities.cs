@@ -1,5 +1,7 @@
 namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
+using ConceptOfRandom.Models.Simulation.Blackjack;
+
 public abstract class GameUtilities
 {
     public static bool IsPlayAgain(Func<ConsoleKey> getKey, Action<string> displayMessage)
@@ -15,8 +17,7 @@ public abstract class GameUtilities
             }
             else if (key == ConsoleKey.N)
             {
-                displayMessage("Thank you for playing!");
-                Environment.Exit(0);
+                throw new ReturnToMainMenuException();
             }
             else
             {
