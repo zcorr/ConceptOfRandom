@@ -3,7 +3,6 @@ using ConceptOfRandom.view;
 
 class Program
 {
-    
     static void Main(string[] args) {
         Console.CursorVisible = true;
         var program = new MenuOutline();

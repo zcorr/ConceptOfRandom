@@ -1,4 +1,5 @@
 using System.Reflection;
+using ConceptOfRandom.Models.API;
 
 namespace ConceptOfRandom.view;
 using ConsoleRenderer;
@@ -27,24 +28,27 @@ public class MenuOutline : IConsoleCanvas{
 	public void HandleInput(ConsoleKey key) {
 		if (key == ConsoleKey.UpArrow) {
 			//Console.Beep(1000, 100);
-			_selectedIndex = (_selectedIndex - 1 + 4) % 4; // Wrap around to the last item
+			_selectedIndex = (_selectedIndex - 1 + 5) % 5; // Wrap around to the last item
 		} else if (key == ConsoleKey.DownArrow) {
 			//Console.Beep(600, 100);
-			_selectedIndex = (_selectedIndex + 1) % 4; // Wrap around to the first item
+			_selectedIndex = (_selectedIndex + 1) % 5; // Wrap around to the first item
 		} else if (key == ConsoleKey.Enter) {
 			//Console.Beep(800, 200);
 			switch (_selectedIndex) {
 				case 0:
-					// Start the wave animation
-					new WaveAnimation().Wave();
+					// Start the blackjack game
+					new BlackjackIntegration().StartGame();
 					break;
 				case 1:
 					//DiceRoll();
 					break;
 				case 2:
-					new BlackjackMenuIntegration().StartGame();
+					new RandomFact().StartFacts();
 					break;
 				case 3:
+					new WaveAnimation().Wave();
+					break;
+				case 4:
 					Environment.Exit(0);
 					break;
 			}
@@ -85,12 +89,15 @@ public class MenuOutline : IConsoleCanvas{
 
 		// Game List Menu
 		Span<string> menuOptions = [
-			"1. Wave Animation",
+			"1. Blackjack",
 			"2. Dice Roll",
-			"3. Blackjack",
-			"4. Exit"
+			"3. Random Facts",
+			"4. Wave Animation",
+			"5. Exit"
 		];
-		
+
+
+
 		var menuX = (canvas.Width - menuOptions[0].Length) / 2;
 		var menuY = 5;
 		

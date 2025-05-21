@@ -3,11 +3,10 @@ using ConceptOfRandom.Models.Simulation.Blackjack;
 
 namespace ConceptOfRandom.view;
 
-public class BlackjackMenuIntegration : MenuOutline
+public class BlackjackIntegration : MenuOutline
 {
     private ConsoleCanvas _canvas;
-    private int _selectedIndex = 0;
-    public BlackjackMenuIntegration()
+    public BlackjackIntegration()
     {
         _canvas = GetCanvas();
     }
