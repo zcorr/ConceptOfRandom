@@ -2,25 +2,26 @@ namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
 public abstract class GameUtilities
 {
-    public static bool IsPlayAgain(Func<string?> readLine, Action<string> writeLine)
+    public static bool IsPlayAgain(Func<ConsoleKey> getKey, Action<string> displayMessage)
     {
-        string? input = readLine();
-        
-        if (input == "Y")
+        while (true)
         {
-            writeLine("Game starting...");
-            return true;
-        }
-        else if (input == "N")
-        {
-            writeLine("Thanks for playing!");
-            return false;
-        }
-        else
-        {
-            writeLine("Incorrect Input!");
-            writeLine("Would you like to play again? (Y/N)");
-            return IsPlayAgain(readLine, writeLine);
+            displayMessage("Would you like to play again? (Y/N)");
+            var key = getKey();
+
+            if (key == ConsoleKey.Y)
+            {
+                return true;
+            }
+            else if (key == ConsoleKey.N)
+            {
+                displayMessage("Thank you for playing!");
+                Environment.Exit(0);
+            }
+            else
+            {
+                displayMessage("Invalid input. Please enter 'Y' or 'N'.");
+            }
         }
     }
 }

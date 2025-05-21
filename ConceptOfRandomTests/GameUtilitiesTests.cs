@@ -8,7 +8,7 @@ public class GameUtilitiesTest
     public void IsPlayAgain_HandlesInvalidInputThenYes()
     {
         // Arrange
-        Queue<string> inputs = new Queue<string>(new[] { "maybe", "Y" });
+        Queue<ConsoleKey> inputs = new Queue<ConsoleKey>(new[] { ConsoleKey.M, ConsoleKey.Y });
         List<string> outputs = new List<string>();
 
         bool result = GameUtilities.IsPlayAgain(
@@ -18,15 +18,14 @@ public class GameUtilitiesTest
 
         // Assert
         Assert.True(result);
-        Assert.Contains("Incorrect Input!", outputs);
-        Assert.Contains("Game starting...", outputs);
+        Assert.Contains("Would you like to play again? (Y/N)", outputs);
     }
 
     [Fact]
     public void IsPlayAgain_HandlesNoImmediately()
     {
         // Arrange
-        Queue<string> inputs = new Queue<string>(new[] { "N" });
+        Queue<ConsoleKey> inputs = new Queue<ConsoleKey>(new[] { ConsoleKey.N });
         List<string> outputs = new List<string>();
 
         bool result = GameUtilities.IsPlayAgain(
@@ -36,9 +35,6 @@ public class GameUtilitiesTest
 
         // Assert
         Assert.False(result);
-        Assert.Contains("Thanks for playing!", outputs);
+        Assert.Contains("Would you like to play again? (Y/N)", outputs);
     }
-
 }
-
-

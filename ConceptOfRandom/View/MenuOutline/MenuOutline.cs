@@ -39,10 +39,10 @@ public class MenuOutline : IConsoleCanvas{
 					new WaveAnimation().Wave();
 					break;
 				case 1:
-					DiceRoll();
+					//DiceRoll();
 					break;
 				case 2:
-					Blackjack();
+					new BlackjackMenuIntegration().StartGame();
 					break;
 				case 3:
 					Environment.Exit(0);
@@ -64,21 +64,10 @@ public class MenuOutline : IConsoleCanvas{
 		canvas.Clear();
 	}
 
-	public ConsoleCanvas GetCanvas() {
+	protected ConsoleCanvas GetCanvas() {
 		return canvas;
 	}
-
-	/**
-	 * THESE TWO METHODS BELOW WILL BE THE GAME METHODS THAT WILL BE INTEGRATED ONCE WE HAVE THE CODE MERGED
-	 */
-	public void DiceRoll() {
-		MakeTitle();
-		
-	}
 	
-	public void Blackjack() {
-	}
-
 	protected void MakeTitle() {
 		Clear();
 		CreateBorder();

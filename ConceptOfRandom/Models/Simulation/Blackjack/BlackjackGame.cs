@@ -3,6 +3,7 @@ using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
 using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+using ConsoleRenderer;
 
 [assembly: InternalsVisibleTo("ConceptOfRandomTests")]
 
@@ -10,13 +11,15 @@ namespace ConceptOfRandom.Models.Simulation.Blackjack;
 
 public class BlackjackGame
 {
-    static readonly Hand PlayerCards = new Hand();
-    static readonly Hand DealerCards = new Hand();
-    static readonly Deck GameDeck;
+    private readonly ConsoleCanvas _canvas;
+    private static readonly Hand PlayerCards = new Hand();
+    private static readonly Hand DealerCards = new Hand();
+    private static readonly Deck GameDeck;
     private static TurnOptions turnDecision = TurnOptions.Undefined;
-    
-    public BlackjackGame()
+
+    public BlackjackGame(ConsoleCanvas canvas)
     {
+        _canvas = canvas;
         StartBlackjackGame(DealerCards, PlayerCards);
     }
 
@@ -25,7 +28,7 @@ public class BlackjackGame
         GameDeck = new Deck();
     }
 
-    public static void StartBlackjackGame(Hand dealerCards, Hand playerCards)
+    public void StartBlackjackGame(Hand dealerCards, Hand playerCards)
     {
         do {
             DisplayWelcomeMessage();
@@ -36,32 +39,147 @@ public class BlackjackGame
             DrawDealerCardFaceDown(dealerCards, gameDeck);
             PlayBlackjack(dealerCards, playerCards, gameDeck);
             DisplayPlayAgainPrompt();
-        } while (GameUtilities.IsPlayAgain(Console.ReadLine, Console.WriteLine));
+        } while (GameUtilities.IsPlayAgain(() => Console.ReadKey(intercept: true).Key, text => _canvas.Text(2, 2, text)));
     }
 
-    private static void DisplayPlayAgainPrompt() {
-        Console.WriteLine("Would you like to play again? (Y/N)");
+    private void DisplayWelcomeMessage()
+    {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width - 21) / 2, 2, "Welcome to Blackjack!");
+        _canvas.Render();
     }
 
-    private static void DrawDealerCardFaceDown(Hand dealerCards, Deck gameDeck) {
-        Card faceDownDealerCard = gameDeck.DrawCard();
-        faceDownDealerCard.IsFaceUp = false;
-        dealerCards.Add(faceDownDealerCard);
+    private void DisplayPlayAgainPrompt()
+    {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width - 34) / 2, 4, "Would you like to play again? (Y/N)");
+        _canvas.Render();
     }
 
-    private static void DrawDealerCard(Hand dealerCards, Deck gameDeck) {
-        dealerCards.Add(gameDeck.DrawCard());
+    private void AskUserForDisplayStyle()
+    {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width - 26) / 2, 2, "Choose your display style:");
+        _canvas.Text((_canvas.Width - 21) / 2, 3, "  1) Word Display art");
+        _canvas.Text((_canvas.Width - 23) / 2, 4, "  2) Symbol Display art");
+        _canvas.Render();
+
+        // Use Console.ReadKey with intercept: true to prevent input from showing
+        var key = Console.ReadKey(intercept: true).Key;
+        CardDisplay.Current = key == ConsoleKey.D1 ? new WordDisplayStrategy() : new SymbolDisplayStrategy();
     }
 
-    private static void DrawPlayerCards(Hand playerCards, Deck gameDeck) {
-        DrawCardForPlayer(playerCards, gameDeck);
-        DrawCardForPlayer(playerCards, gameDeck);
+    private void PlayBlackjack(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    {
+        while (true)
+        {
+            _canvas.Clear();
+            turnDecision = TurnOptions.Undefined;
+            PrintHands(dealerCards, playerCards);
+
+            var playerHandValue = GetHandValue(playerCards);
+            if (playerHandValue == 21)
+            {
+                StandIfPlayerHasBlackjack(true);
+                break;
+            }
+
+            _canvas.Text((_canvas.Width / 2 - 25), 9, "Type 1 to Hit, 0 to Stand");
+            _canvas.Render();
+
+            var choice = Console.ReadKey(intercept: true).Key;
+            if (choice == ConsoleKey.D1)
+            {
+                turnDecision = TurnOptions.Hit;
+                DrawCardForPlayer(playerCards, gameDeck);
+
+                playerHandValue = GetHandValue(playerCards);
+                if (playerHandValue > 21)
+                {
+                    EndGameIfPlayerBusted(dealerCards, playerCards);
+                    return;
+                }
+            }
+            else if (choice == ConsoleKey.D0)
+            {
+                turnDecision = TurnOptions.Stand;
+                break;
+            }
+        }
+
+        BjWinCalculation(dealerCards, playerCards, gameDeck);
     }
 
-    private static void DrawCardForPlayer(Hand playerCards, Deck gameDeck) {
-        playerCards.Add(gameDeck.DrawCard());
+    internal void BjWinCalculation(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    {
+        var dealerHandValue = GetHandValue(dealerCards);
+
+        while (dealerHandValue < 17)
+        {
+            DrawDealerCard(dealerCards, gameDeck);
+            dealerHandValue = GetHandValue(dealerCards);
+        }
+
+        var playerHandValue = GetHandValue(playerCards);
+        string resultMessage;
+
+        if (dealerHandValue > 21 || playerHandValue > dealerHandValue)
+        {
+            resultMessage = "You Win!";
+        }
+        else if (dealerHandValue == playerHandValue)
+        {
+            resultMessage = "It's a Push!";
+        }
+        else
+        {
+            resultMessage = "You Lose!";
+        }
+
+        DisplayEndOfGameMessages(dealerCards, playerCards, resultMessage);
     }
 
+    private void PrintHands(Hand dealerCards, Hand playerCards)
+    {
+        _canvas.Clear();
+        _canvas.Render();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width / 2 - 15), 2, "Dealer's cards:");
+        _canvas.Text((_canvas.Width - dealerCards.ToString().Length) / 2 , 3, dealerCards.ToString());
+        _canvas.Text((_canvas.Width - 11) / 2, 5, "Your cards:");
+        _canvas.Text((_canvas.Width - playerCards.ToString().Length) / 2, 6, playerCards.ToString());
+        _canvas.Render();
+    }
+
+    private void EndGameIfPlayerBusted(Hand dealerCards, Hand playerCards)
+    {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width - 5) / 2, 8, "BUST!");
+        DisplayEndOfGameMessages(dealerCards, playerCards, "You busted!");
+    }
+
+    private void DisplayEndOfGameMessages(Hand dealerCards, Hand playerCards, string result)
+    {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        dealerCards.RevealAll();
+        _canvas.Text((_canvas.Width - 12) / 2, 5, "Final hands:");
+        _canvas.Text((_canvas.Width - 20) / 2, 6, "Dealer's cards were:");
+        _canvas.Text((_canvas.Width - dealerCards.ToString().Length) / 2, 7, dealerCards.ToString());
+        _canvas.Text((_canvas.Width - 16) / 2, 8, "Your cards were:");
+        _canvas.Text((_canvas.Width - playerCards.ToString().Length) / 2, 9, playerCards.ToString());
+        _canvas.Text((_canvas.Width - result.Length) / 2, 10, "");
+        _canvas.Text((_canvas.Width - result.Length) / 2, 11, result);
+        _canvas.Text((_canvas.Width - 34) / 2, 12, "Press any key to continue...");
+        _canvas.Render();
+
+        Console.ReadKey(intercept: true);
+    }
+    
     private static Deck SetUpNewGameDeck(Hand dealerCards, Hand playerCards) {
         var gameDeck = new Deck();
         gameDeck.Shuffle();
@@ -69,136 +187,26 @@ public class BlackjackGame
         dealerCards.Clear();
         return gameDeck;
     }
-
-    private static void AskUserForDisplayStyle() {
-        Console.WriteLine("Choose your display style:");
-        Console.WriteLine("  1) Word Display art");
-        Console.WriteLine("  2) Symbol Display art");
-        var choice = Console.ReadLine();
-        if (choice == "1")
-            CardDisplay.Current =
-                new WordDisplayStrategy();
-        else
-            CardDisplay.Current =
-                new SymbolDisplayStrategy();
-    }
-
-    private static void DisplayWelcomeMessage() {
-        Console.WriteLine("Welcome to Blackjack!\n");
+    
+    private static void DrawPlayerCards(Hand playerCards, Deck gameDeck) {
+        DrawCardForPlayer(playerCards, gameDeck);
+        DrawCardForPlayer(playerCards, gameDeck);
     }
     
-    public static void PlayBlackjack(Hand dealerCards, Hand playerCards, Deck gameDeck)
-    {
-        while (true) {
-            turnDecision = TurnOptions.Undefined;
-            PrintHands(dealerCards, playerCards);
-            var playerHandValue = GetHandValue(playerCards);
-            bool playerHasBlackjack = (playerHandValue == 21);
-            StandIfPlayerHasBlackjack(playerHasBlackjack);
-
-            if (turnDecision == TurnOptions.Stand) break;
-
-            Console.WriteLine("Type 1 to Hit, 0 to Stand");
-            var choice = Console.ReadLine();
-            if(choice == "1") turnDecision = TurnOptions.Hit;
-            else if(turnDecision == TurnOptions.Undefined) turnDecision = TurnOptions.Stand;
-            if (turnDecision == TurnOptions.Hit) {
-                DrawCardForPlayer(playerCards, gameDeck);
-                playerHandValue = GetHandValue(playerCards);
-                bool playerHasBusted = (playerHandValue > 21);
-                if (playerHasBusted) {
-                    EndGameIfPlayerBusted(dealerCards, playerCards);
-                    return;
-                }
-
-                StandIfPlayerHasBlackjack(playerHasBlackjack);
-                if (turnDecision == TurnOptions.Stand) break;
-            }
-            else break;
-        }
-        // ---------- dealer’s turn / outcome ----------
-        BjWinCalculation(dealerCards, playerCards, gameDeck);
+    private static void DrawCardForPlayer(Hand playerCards, Deck gameDeck) {
+        playerCards.Add(gameDeck.DrawCard());
     }
-
-    private static void EndGameIfPlayerBusted(Hand dealerCards, Hand playerCards) {
-        Console.WriteLine("BUST!");
-        DisplayEndOfGameMessages(dealerCards, playerCards);
+    
+    private static void DrawDealerCard(Hand dealerCards, Deck gameDeck) {
+        dealerCards.Add(gameDeck.DrawCard());
     }
-
-    private static void StandIfPlayerHasBlackjack(bool playerHasBlackjack) {
-        if (playerHasBlackjack)
-        {
-            Console.WriteLine("21! You stand automatically.");
-            turnDecision = TurnOptions.Stand;
-        }
+    
+    private static void DrawDealerCardFaceDown(Hand dealerCards, Deck gameDeck) {
+        var faceDownDealerCard = gameDeck.DrawCard();
+        faceDownDealerCard.IsFaceUp = false;
+        dealerCards.Add(faceDownDealerCard);
     }
-
-
-    internal static string PrintHands(Hand dealerCards, Hand playerCards)
-    {
-        // Each helper call writes its own heading + hand to the console
-        // and returns the hand text.
-        var dealerHandText = PrintSingleHand("Dealer's cards:", dealerCards);
-        var playerHandText = PrintSingleHand("Your cards:",    playerCards);
-
-        // Return the concatenation of the two hand strings (no extra newlines).
-        return dealerHandText + playerHandText;
-    }
-
-    internal static string PrintSingleHand(string heading, Hand hand)
-    {
-        var handText = hand.ToString();          // e.g. “Two♠  Three♠”
-
-        Console.WriteLine(heading);              // “Dealer's cards:”
-        Console.WriteLine(handText);             // “Two♠  Three♠”
-
-        return handText;                         // caller can use it if needed
-    }
-
-
-    internal static void BjWinCalculation(Hand dealerCards, Hand playerCards, Deck gameDeck)
-    {
-        int dealerHandValue = GetHandValue(dealerCards);
-        
-        while (dealerHandValue < 17)
-        {
-            DrawDealerCard(dealerCards, gameDeck);
-            dealerHandValue = GetHandValue(dealerCards);
-            bool dealerHasBlackjackOrBusted = dealerHandValue >= 21;
-            if (dealerHasBlackjackOrBusted)
-            {
-                if (Pushed(dealerCards, playerCards))
-                {
-                    DisplayEndOfGameMessages(dealerCards, playerCards);
-                    return;
-                }
-            }
-        }
-        
-        if (Pushed(dealerCards, playerCards))
-        {
-            DisplayEndOfGameMessages(dealerCards, playerCards);
-            return;
-        }
-        
-        int playerHandValue = GetHandValue(playerCards);
-        bool dealerHasNotBusted = dealerHandValue <= 21;
-        bool dealerHasHigherScoreThanPlayer = dealerHandValue > playerHandValue;
-        if (dealerHasNotBusted && dealerHasHigherScoreThanPlayer)
-            DisplayLossMessage();
-        else
-            DisplayWinMessage();
-        DisplayEndOfGameMessages(dealerCards, playerCards);
-    }
-
-    private static void DisplayWinMessage() {
-        Console.WriteLine("You win!");
-    }
-
-    private static void DisplayLossMessage() {
-        Console.WriteLine("You lose!");
-    }
-
+    
     internal static int GetHandValue(Hand hand)
     {
         if (hand.Count <= 1) throw new ArgumentException("Hand is too short, error.");
@@ -222,28 +230,28 @@ public class BlackjackGame
             aceCount--;
         }
         return handValue;
-
     }
-
+    
+    private void StandIfPlayerHasBlackjack(bool playerHasBlackjack) {
+        if (playerHasBlackjack)
+        {
+            _canvas.Text((_canvas.Width - 34) / 2, 8, "BLACKJACK! Automatically standing.");
+            turnDecision = TurnOptions.Stand;
+        }
+    }
+    
+   
+    
     internal static bool Pushed(Hand dealerHand, Hand playerHand)
     {
         if (GetHandValue(dealerHand) == 21 && GetHandValue(playerHand) == 21)
         {
-            Console.WriteLine("Push!");
             return true;
         }
         return false;
     }
-    static string DisplayEndOfGameMessages(Hand dealerCards, Hand playerCards)
-    {
-        dealerCards.RevealAll();
-        var output = "";
-        output += "Final hands:\n";
-        output += "Dealer's cards were:\n";
-        output += dealerCards+"\n";
-        output += "Your cards were:\n";
-        output += playerCards+"\n";
-        Console.WriteLine(output);
-        return output;
-    }
+    
+
+
+    
 }
