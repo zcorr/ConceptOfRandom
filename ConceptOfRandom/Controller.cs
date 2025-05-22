@@ -13,14 +13,15 @@ public class Controller {
 		"2. Dice Roll",
 		"3. Random Facts",
 		"4. Wave Animation",
-		"5. Exit"
+		"5. Timer",
+		"6. Complete Randomness",
+		"7. Exit"
 	};
 
 	public void Run() {
-		while (true) {
-			Console.Clear();
+		while (true)
+		{
 			Console.CursorVisible = false;
-
 			menuView.AutoResize = true;
 			menuView.Clear();
 			menuView.CreateBorder();
@@ -39,6 +40,7 @@ public class Controller {
 				}
 				else if (key == ConsoleKey.Enter) {
 					ExecuteMenuOption(_selectedIndex);
+					break;
 				}
 
 				menuView.RenderMenu("Concept of Random", "Up / Down arrows to navigate, Enter to select",
@@ -74,8 +76,16 @@ public class Controller {
 				new WaveAnimation().Wave();
 				break;
 			case 4:
+				new TimerIntegration().StartTimer();
+				break;
+			case 5:
+				break;
+			case 6:
 				Environment.Exit(0);
 				break;
 		}
 	}
+	
+	
+	
 }

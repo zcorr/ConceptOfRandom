@@ -40,7 +40,9 @@ public class MenuOutline : IConsoleCanvas {
 			"2. Dice Roll",
 			"3. Random Facts",
 			"4. Wave Animation",
-			"5. Exit"
+			"5. Timer",
+			"6. Complete Randomness",
+			"7. Exit"
 		});
 	}
 

@@ -1,15 +1,20 @@
+using ConceptOfRandom.view;
+
 namespace ConceptOfRandom.Models.Simulation.Timer;
 
 public class TimerObserver : IObserver<TimerStatus> {
-    public void OnNext(TimerStatus status) {
-        Console.WriteLine("Timer status changed to: " + status.ToString());
+    
+    public event Action<TimerStatus> TimerStatusChanged;
+    public void OnNext(TimerStatus status)
+    {
+        TimerStatusChanged?.Invoke(status);    
     }
 
     public void OnError(Exception error) {
-        Console.WriteLine("Exception occured: " + error.Message);
+        TimerStatusChanged?.Invoke(TimerStatus.NotStarted);
     }
 
     public void OnCompleted() {
-        Console.WriteLine("Observation completed.");
+        TimerStatusChanged?.Invoke(TimerStatus.Completed);
     }
 }

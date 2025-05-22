@@ -21,7 +21,9 @@ public class TimerTracker: IObservable<TimerStatus> {
         OnTimedEvent(this, null);
     }
 
-    private void OnTimedEvent(Object source, ElapsedEventArgs e) {
+    private void OnTimedEvent(Object source, ElapsedEventArgs e)
+    {
+        timer.Stop();
         NotifyObservers(TimerStatus.Completed);
     }
 
