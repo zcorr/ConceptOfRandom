@@ -24,7 +24,7 @@ Coin and Dice are relatively simple but designed for maximum testability, simila
 Using Dice, Maks had the idea to implement various dice games. This proved a challenge, so, while the groundwork was created, no games were implemented.
 
 #### Timer
-The timer implementation is also lumped in with the rest of the simulations, as its entirely local. Using the **Observer** pattern, there's a `TimerTracker` that's an observable and may be observed by `TimerObserver`s. In TimerTracker, you can add observers, start a timer to notify the observers, and remove the observers.
+The timer implementation is also lumped in with the rest of the simulations, as its entirely local. Using the **Observer** pattern, there's a `TimerTracker` that's an observable and may be observed by `TimerObserver`s. In `TimerTracker`, you can add observers, start a timer to notify the observers, and remove the observers.
 
 ### UI
 The UI was implemented using the console renderer, separating View and Controller into their own sections.
@@ -33,4 +33,4 @@ The controller is in charge of any logic and tells the view to display things.
 
 
 ## Jira Board
-An export of the Jira board is/will be available in this repository.
+An export of the Jira board is available in this repository.
