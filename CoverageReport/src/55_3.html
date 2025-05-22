@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/ViewTests/MenuTest1.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.view;
+using NSubstitute;
+
+namespace ConceptOfRandomTests;
+
+public class MenuTest1 {
+	
+	private IConsoleCanvas _mockCanvas = Substitute.For&lt;IConsoleCanvas&gt;();
+	
+	[Fact]
+	public void TestRendering()
+	{
+		_mockCanvas.Render();
+		_mockCanvas.Received(1).Render();
+	}
+	
+
+	[Fact]
+	public void TestCreateBorder() {
+		_mockCanvas.Render();
+		_mockCanvas.CreateBorder();
+		_mockCanvas.Received(1).CreateBorder();
+	}
+	
+	[Fact]
+	public void TestAutoResize() {
+		_mockCanvas.AutoResize = true;
+		Assert.True(_mockCanvas.AutoResize);
+		_mockCanvas.AutoResize = false;
+		Assert.False(_mockCanvas.AutoResize);
+	}
+	
+	[Fact]
+	public void TestClear() {
+		_mockCanvas.Clear();
+		_mockCanvas.Received(1).Clear();
+	}
+
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,2,8,72,1],[12,2,12,3,1],[13,3,13,24,1],[14,3,14,36,1],[15,2,15,3,1],[19,33,19,34,1],[20,3,20,24,1],[21,3,21,30,1],[22,3,22,42,1],[23,2,23,3,1],[26,31,26,32,1],[27,3,27,33,1],[28,3,28,39,1],[29,3,29,34,1],[30,3,30,40,1],[31,2,31,3,1],[34,26,34,27,1],[35,3,35,23,1],[36,3,36,35,1],[37,2,37,3,1]]);
+    </script>
+  </body>
+</html>

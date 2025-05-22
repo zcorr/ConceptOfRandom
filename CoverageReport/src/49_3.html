@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Facts/RandomCatFacts.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text.Json;
+namespace ConceptOfRandom.Models.API;
+
+public class RandomCatFacts : APIModel {
+    public new readonly string Name = &quot;Cat Facts&quot;;
+    private const string url = &quot;https://meowfacts.herokuapp.com/&quot;;
+    public new readonly string Parameters;
+
+    public class CatFact {
+        public List&lt;string&gt; data { get; init; }
+    }
+    
+    public override async Task&lt;string&gt; Get() {
+        string response = await APIClient.Instance.Fetch(url, Parameters);
+        CatFact fact = JsonSerializer.Deserialize&lt;CatFact&gt;(response)!;
+        return fact.data[0];
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[5,5,5,51,1],[10,36,10,40,1],[10,41,10,46,1],[13,46,13,47,1],[14,9,14,75,1],[15,9,15,71,1],[16,9,16,29,1],[17,5,17,6,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/DiceTest.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation;
+
+namespace ConceptOfRandomTests.SimulationTests;
+
+public class DiceTest
+{
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(-1)]
+    public void AssertThrowsArgumentExceptionWhenLessThan3SidesTest(int sides)
+    {
+        Assert.Throws&lt;ArgumentException&gt;(() =&gt; new Dice(sides));
+    }
+
+    [Fact]
+    public void AssertProperCreationOfRange()
+    {
+        Dice dice = new Dice(3);
+
+        Assert.Equal(3, dice.sides);
+    }
+
+    [Fact]
+    public void AssertToStringAfterRoll()
+    {
+        Dice dice = new Dice(3);
+        dice.lastRoll = 4;
+
+        string targetString = $&quot;d3 rolled a {dice.lastRoll}.&quot;;
+        
+        Assert.Equal(dice.ToString(), targetString);
+    }
+
+    [Fact]
+    public void AssertToStringNoRoll()
+    {
+        Dice dice = new Dice(6);
+
+        string targetString = $&quot;d6 hasn&#39;t been rolled yet.&quot;;
+        
+        Assert.Equal(dice.ToString(), targetString);
+    }
+
+    [Fact]
+    public void AssertRollsInRange()
+    {
+        Dice dice = new Dice(10);
+
+        for (int i = 0; i &lt; 25; i++)
+        {
+            Assert.True(dice.Roll() &lt;= 10);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,5,13,6,1],[14,9,14,48,1],[14,48,14,63,1],[14,63,14,65,1],[15,5,15,6,1],[19,5,19,6,1],[20,9,20,33,1],[22,9,22,37,1],[23,5,23,6,1],[27,5,27,6,1],[28,9,28,33,1],[29,9,29,27,1],[31,9,31,63,1],[33,9,33,53,1],[34,5,34,6,1],[38,5,38,6,1],[39,9,39,33,1],[41,9,41,61,1],[43,9,43,53,1],[44,5,44,6,1],[48,5,48,6,1],[49,9,49,34,1],[51,14,51,23,1],[51,25,51,31,1],[51,33,51,36,1],[52,9,52,10,1],[53,13,53,44,1],[54,9,54,10,1],[55,5,55,6,1]]);
+    </script>
+  </body>
+</html>

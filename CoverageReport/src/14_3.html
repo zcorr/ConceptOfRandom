@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Program.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection.Metadata.Ecma335;
+using ConceptOfRandom.View;
+
+namespace ConceptOfRandom;
+using ConceptOfRandom.View;
+using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
+class Program
+{
+    static void Main(string[] args) {
+        Console.CursorVisible = false;
+        while (true) {
+            var controller = new Controller();
+            try {
+                controller.Run();
+            }
+            catch (ReturnToMainMenuException) {
+                continue;
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,37,10,38,0],[11,9,11,39,0],[12,9,12,21,0],[12,22,12,23,0],[13,13,13,47,0],[14,17,14,18,0],[15,17,15,34,0],[16,13,16,14,0],[17,13,17,46,0],[17,47,17,48,0],[18,17,18,26,0],[20,9,20,10,0]]);
+    </script>
+  </body>
+</html>

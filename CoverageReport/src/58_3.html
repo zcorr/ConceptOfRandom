@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/PotTest.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.DiceGames;
+
+namespace ConceptOfRandomTests.SimulationTests;
+
+public class PotTest
+{
+    [Fact]
+    public void AssertProperPotCreation()
+    {
+        Pot pot = new Pot();
+
+        int expectedBalance = 0;
+        
+        Assert.Equal(expectedBalance, pot.balance);
+    }
+
+    [Fact]
+    public void AssertReceiveFunctionality()
+    {
+        Pot pot = new Pot();
+
+        int toReceive = 1000;
+        
+        pot.Receive(toReceive);
+        
+        Assert.Equal(toReceive, pot.balance);
+    }
+
+    [Fact]
+    public void AssertPayFunctionality()
+    {
+        Pot pot = new Pot();
+        
+        pot.Receive(1500);
+        pot.Pay(500);
+            
+        int expectedBalance = 1000;
+        
+        Assert.Equal(expectedBalance, pot.balance);
+    }
+
+    [Fact]
+    public void AssertShowBalanceFunctionality()
+    {
+        Pot pot = new Pot();
+        
+        Assert.Equal(&quot;Pot amount: $0&quot;, pot.ShowBalance());
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,6,1],[10,9,10,29,1],[12,9,12,33,1],[14,9,14,52,1],[15,5,15,6,1],[19,5,19,6,1],[20,9,20,29,1],[22,9,22,30,1],[24,9,24,32,1],[26,9,26,46,1],[27,5,27,6,1],[31,5,31,6,1],[32,9,32,29,1],[34,9,34,27,1],[35,9,35,22,1],[37,9,37,36,1],[39,9,39,52,1],[40,5,40,6,1],[44,5,44,6,1],[45,9,45,29,1],[47,9,47,59,1],[48,5,48,6,1]]);
+    </script>
+  </body>
+</html>

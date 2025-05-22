@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Tools/APIClient.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConceptOfRandom.Models.API;
+
+public class APIClient {
+    private static readonly Lazy&lt;APIClient&gt; LazyInstance = new(() =&gt; new APIClient());
+    private static HttpClient client;
+
+    public static APIClient Instance =&gt; LazyInstance.Value;
+
+    private APIClient() {
+        client = new HttpClient();
+    }
+    
+    public async Task&lt;string&gt; Fetch(string url, string parameters) {
+        string parameterString = string.IsNullOrWhiteSpace(parameters) ? &quot;&quot; : &quot;?&quot;+parameters;
+        using HttpResponseMessage response = await client.GetAsync(url + parameterString);
+        response.EnsureSuccessStatusCode();
+        var returnResponse = await response.Content.ReadAsStringAsync();
+        return returnResponse;
+    }
+    
+    
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[4,5,4,70,1],[4,70,4,85,1],[4,85,4,87,1],[7,41,7,59,1],[9,5,9,24,1],[9,25,9,26,1],[10,9,10,35,1],[11,5,11,6,1],[13,68,13,69,1],[14,9,14,94,1],[15,9,15,91,1],[16,9,16,44,1],[17,9,17,73,1],[18,9,18,31,1],[19,5,19,6,1]]);
+    </script>
+  </body>
+</html>

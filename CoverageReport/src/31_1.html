@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/DiceGames/Player.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConceptOfRandom.Models.Simulation.DiceGames;
+
+public class Player : IPlayer
+{
+    private Wallet wallet = new Wallet();
+
+    public string name { get; }
+
+    public Player(string name)
+    {
+        this.name = name;
+    }
+
+    public int PlaceBet(Pot pot, int amount)
+    { 
+        pot.Receive(wallet.Pay(amount));
+        
+        return amount;
+    }
+
+    public string ShowBalance()
+    {
+        return $&quot;{name}&#39;s balance: {wallet.balance}&quot;;
+    }
+    
+    public void ReceiveWinnings(int amount)
+    {
+        wallet.Receive(amount);
+    }
+    
+    public int GetPlayerBalance()
+    {
+        return wallet.balance;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[5,5,5,42,1],[7,26,7,30,1],[9,5,9,31,1],[10,5,10,6,1],[11,9,11,26,1],[12,5,12,6,1],[15,5,15,6,1],[16,9,16,41,1],[18,9,18,23,1],[19,5,19,6,1],[22,5,22,6,1],[23,9,23,54,1],[24,5,24,6,1],[27,5,27,6,1],[28,9,28,32,1],[29,5,29,6,1],[32,5,32,6,1],[33,9,33,31,1],[34,5,34,6,1]]);
+    </script>
+  </body>
+</html>

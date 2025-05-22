@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Facts/RandomUselessFacts.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text.Json;
+
+namespace ConceptOfRandom.Models.API;
+
+public class RandomUselessFacts : APIModel {
+    public new readonly string Name = &quot;Useless Facts&quot;;
+    private const string url = &quot;https://uselessfacts.jsph.pl/api/v2/facts/random&quot;;
+    public new readonly string Parameters;
+
+    public class UselessFact {
+        public string text { get; init; }
+    }
+    
+    public override async Task&lt;string&gt; Get() {
+        string response = await APIClient.Instance.Fetch(url, Parameters);
+        UselessFact fact = JsonSerializer.Deserialize&lt;UselessFact&gt;(response)!;
+        return fact.text;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[6,5,6,55,1],[11,30,11,34,1],[11,35,11,40,1],[14,46,14,47,1],[15,9,15,75,1],[16,9,16,79,1],[17,9,17,26,1],[18,5,18,6,1]]);
+    </script>
+  </body>
+</html>

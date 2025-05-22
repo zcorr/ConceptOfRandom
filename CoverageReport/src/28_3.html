@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/Utility Classes/RankUtilities.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
+public static class RankExtensions
+{
+    public static string ToSymbol(this Rank rank)
+    {
+        return rank switch
+        {
+            Rank.Two     =&gt; &quot;2&quot;,
+            Rank.Three   =&gt; &quot;3&quot;,
+            Rank.Four    =&gt; &quot;4&quot;,
+            Rank.Five    =&gt; &quot;5&quot;,
+            Rank.Six     =&gt; &quot;6&quot;,
+            Rank.Seven   =&gt; &quot;7&quot;,
+            Rank.Eight   =&gt; &quot;8&quot;,
+            Rank.Nine    =&gt; &quot;9&quot;,
+            Rank.Ten     =&gt; &quot;10&quot;,
+            Rank.Jack    =&gt; &quot;J&quot;,
+            Rank.Queen   =&gt; &quot;Q&quot;,
+            Rank.King    =&gt; &quot;K&quot;,
+            Rank.Ace     =&gt; &quot;A&quot;,
+            _             =&gt; rank.ToString()
+        };
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,5,8,6,1],[9,9,11,29,1],[11,29,11,32,1],[11,32,12,29,1],[12,29,12,32,1],[12,32,13,29,1],[13,29,13,32,1],[13,32,14,29,1],[14,29,14,32,1],[14,32,15,29,1],[15,29,15,32,1],[15,32,16,29,1],[16,29,16,32,1],[16,32,17,29,1],[17,29,17,32,1],[17,32,18,29,1],[18,29,18,32,1],[18,32,19,29,1],[19,29,19,33,1],[19,33,20,29,1],[20,29,20,32,1],[20,32,21,29,1],[21,29,21,32,1],[21,32,22,29,1],[22,29,22,32,1],[22,32,23,29,1],[23,29,23,32,1],[23,32,24,30,1],[24,30,24,45,1],[24,45,25,11,1],[26,5,26,6,1]]);
+    </script>
+  </body>
+</html>

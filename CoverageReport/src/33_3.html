@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/Objects/Deck.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
+public class Deck : Hand
+{
+    private static readonly Random _rng = new Random();
+
+    public Deck() : base() =&gt; BuildDeck();
+
+    public Deck(IEnumerable&lt;Card&gt; cards) : base(cards)
+    {
+    }
+    void BuildDeck()
+    {
+        Cards.Clear();
+        foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+        foreach (Rank rank in Enum.GetValues(typeof(Rank)))
+            Cards.Add(new Card(rank,suit));
+    }
+
+
+    public void Shuffle()
+    {
+        var shuffled = Cards.OrderBy(_ =&gt; _rng.Next()).ToList();
+        Cards.Clear();
+        Cards.AddRange(shuffled);
+    }
+
+    public Card DrawCard()
+    {
+        if (Count == 0)
+            throw new InvalidOperationException(&quot;Deck is empty&quot;);
+
+        int lastIndex = Count - 1;
+        var card = Cards[lastIndex];
+        Cards.RemoveAt(lastIndex);
+
+        return card;
+    }
+
+    public List&lt;Card&gt; ToList() =&gt; [..Cards];
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[7,5,7,56,1],[9,21,9,27,1],[9,31,9,42,1],[11,44,11,55,1],[12,5,12,6,1],[13,5,13,6,1],[15,5,15,6,1],[16,9,16,23,1],[17,9,17,16,1],[17,18,17,27,1],[17,28,17,30,1],[17,31,17,59,1],[18,9,18,16,1],[18,18,18,27,1],[18,28,18,30,1],[18,31,18,59,1],[19,13,19,44,1],[20,5,20,6,1],[24,5,24,6,1],[25,9,25,43,1],[25,43,25,54,1],[25,54,25,65,1],[26,9,26,23,1],[27,9,27,34,1],[28,5,28,6,1],[31,5,31,6,1],[32,9,32,24,1],[33,13,33,66,1],[35,9,35,35,1],[36,9,36,37,1],[37,9,37,35,1],[39,9,39,21,1],[40,5,40,6,1],[42,35,42,44,1]]);
+    </script>
+  </body>
+</html>

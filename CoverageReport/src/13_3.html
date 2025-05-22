@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/View/Games/BlackjackIntegration.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConsoleRenderer;
+using ConceptOfRandom.Models.Simulation.Blackjack;
+using ConceptOfRandom.View;
+
+namespace ConceptOfRandom.view;
+
+public class BlackjackIntegration : MenuOutline
+{
+    private IConsoleCanvas _canvas;
+    public BlackjackIntegration()
+    {
+        _canvas = this;
+    }
+
+    public void StartGame()
+    {
+        // Clearing canvas to set up visuals for blackjack game
+        _canvas.Clear();
+        _canvas.CreateBorder();
+     
+        // Calling game - modified entire blackjack game to use console renderer (yay refactoring)
+        var game = new BlackjackGame(_canvas);
+    }
+
+    private void ExitGame()
+    {
+        
+    }
+    
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,34,0],[11,5,11,6,0],[12,9,12,24,0],[13,5,13,6,0],[16,5,16,6,0],[18,9,18,25,0],[19,9,19,32,0],[22,9,22,47,0],[23,5,23,6,0],[26,5,26,6,0],[28,5,28,6,0]]);
+    </script>
+  </body>
+</html>

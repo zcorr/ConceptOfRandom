@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/BlackjackGame.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Runtime.CompilerServices;
+using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+using ConceptOfRandom.view;
+using ConceptOfRandom.View;
+using ConsoleRenderer;
+
+[assembly: InternalsVisibleTo(&quot;ConceptOfRandomTests&quot;)]
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack;
+
+public class BlackjackGame
+{
+    private readonly IConsoleCanvas _canvas;
+    private bool usingConsoleRenderer = false;
+    public Hand PlayerCards { get; private set; } = new Hand();
+    public Hand DealerCards { get; private set; } = new Hand();
+    private static readonly Deck GameDeck;
+    public TurnOptions TurnDecision = TurnOptions.Undefined;
+
+    public BlackjackGame(IConsoleCanvas canvas)
+    {
+        
+        _canvas = canvas;
+        usingConsoleRenderer = true;
+        StartBlackjackGameConsoleRenderer(DealerCards, PlayerCards);
+    }
+
+    public BlackjackGame() {
+        usingConsoleRenderer = false;
+    }
+
+    static BlackjackGame()
+    {
+        GameDeck = new Deck();
+    }
+    
+    public void StartBlackjackGameConsoleRenderer(Hand dealerCards, Hand playerCards) {
+        try {
+            do {
+                DisplayWelcomeMessage();
+                AskUserForDisplayStyle();
+                var gameDeck = SetUpNewGameDeck(dealerCards, playerCards);
+                DrawPlayerCards(playerCards, gameDeck);
+                DrawDealerCard(dealerCards, gameDeck);
+                DrawDealerCardFaceDown(dealerCards, gameDeck);
+                PlayBlackjack(dealerCards, playerCards, gameDeck);
+                DisplayPlayAgainPrompt();
+            } while (GameUtilities.IsPlayAgain(() =&gt; Console.ReadKey(intercept: true).Key, _canvas));
+        } catch (ReturnToMainMenuException) {
+            // Clear canvas and exit gracefully
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            _canvas.Render();
+            throw; // Re-throw to propagate to the main menu
+        }
+    }
+    
+    public void StartBlackjackGame(Hand dealerCards, Hand playerCards)
+    {
+        do {
+            DisplayWelcomeMessage();
+            AskUserForDisplayStyle();
+            var gameDeck = SetUpNewGameDeck(dealerCards, playerCards);
+            DrawPlayerCards(playerCards, gameDeck);
+            DrawDealerCard(dealerCards, gameDeck);
+            DrawDealerCardFaceDown(dealerCards, gameDeck);
+            PlayBlackjack(dealerCards, playerCards, gameDeck);
+            DisplayPlayAgainPrompt();
+        } while (GameUtilities.IsPlayAgain(Console.ReadLine, Console.WriteLine));
+    }
+    
+    private void DisplayWelcomeMessage()
+    {
+        if (usingConsoleRenderer) {
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            _canvas.Text((_canvas.Width - 21) / 2, 2, &quot;Welcome to Blackjack!&quot;);
+            _canvas.Render();
+        }
+        else {
+            Console.WriteLine(&quot;Welcome to Blackjack!\n&quot;);
+        }
+    }
+
+    private void DisplayPlayAgainPrompt()
+    {
+        if (usingConsoleRenderer) {
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            _canvas.Text((_canvas.Width - 34) / 2, 4, &quot;Would you like to play again? (Y/N)&quot;);
+            _canvas.Render();
+        }
+        else {
+            Console.WriteLine(&quot;Would you like to play again? (Y/N)&quot;);
+        }
+    }
+
+    private void AskUserForDisplayStyle()
+    {
+        if (usingConsoleRenderer) {
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            _canvas.Text((_canvas.Width - 26) / 2, 2, &quot;Choose your display style:&quot;);
+            _canvas.Text((_canvas.Width - 21) / 2, 3, &quot;  1) Word Display art&quot;);
+            _canvas.Text((_canvas.Width - 23) / 2, 4, &quot;  2) Symbol Display art&quot;);
+            _canvas.Render();
+
+            // Use Console.ReadKey with intercept: true to prevent input from showing
+            var key = Console.ReadKey(intercept: true).Key;
+            CardDisplay.Current = key == ConsoleKey.D1 ? new WordDisplayStrategy() : new SymbolDisplayStrategy();
+        }
+        else {
+            Console.WriteLine(&quot;Choose your display style:&quot;);
+            Console.WriteLine(&quot;  1) Word Display art&quot;);
+            Console.WriteLine(&quot;  2) Symbol Display art&quot;);
+            var choice = Console.ReadLine();
+            if (choice == &quot;1&quot;)
+                CardDisplay.Current =
+                    new WordDisplayStrategy();
+            else
+                CardDisplay.Current =
+                    new SymbolDisplayStrategy();
+        }
+    }
+
+    public void PlayBlackjack(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    {
+        while (true)
+        {
+            if(usingConsoleRenderer) _canvas.Clear();
+            TurnDecision = TurnOptions.Undefined;
+            PrintHands(dealerCards, playerCards);
+            var playerHandValue = GetHandValue(playerCards);
+            bool playerHasBlackjack = (playerHandValue == 21);
+            if (playerHasBlackjack)  StandIfPlayerHasBlackjack(playerHasBlackjack);
+            if (TurnDecision == TurnOptions.Stand) break;
+
+            if (usingConsoleRenderer) {
+                _canvas.Text((_canvas.Width / 2 - 25), 9, &quot;Type 1 to Hit, 0 to Stand&quot;);
+                _canvas.Render();
+
+                var choice = Console.ReadKey(intercept: true).Key;
+                if (choice == ConsoleKey.D1) {
+                    TurnDecision = TurnOptions.Hit;
+                    DrawCardForPlayer(playerCards, gameDeck);
+
+                    playerHandValue = GetHandValue(playerCards);
+                    if (playerHandValue &gt; 21) {
+                        EndGameIfPlayerBusted(dealerCards, playerCards);
+                        return;
+                    }
+                }
+                else if (choice == ConsoleKey.D0) {
+                    TurnDecision = TurnOptions.Stand;
+                    break;
+                }
+            }
+            
+            else {
+                Console.WriteLine(&quot;Type 1 to Hit, 0 to Stand&quot;);
+                var choice = Console.ReadLine();
+                if(choice == &quot;1&quot;) TurnDecision = TurnOptions.Hit;
+                else if(TurnDecision == TurnOptions.Undefined) TurnDecision = TurnOptions.Stand;
+                if (TurnDecision == TurnOptions.Hit) {
+                    DrawCardForPlayer(playerCards, gameDeck);
+                    playerHandValue = GetHandValue(playerCards);
+                    bool playerHasBusted = (playerHandValue &gt; 21);
+                    if (playerHasBusted) {
+                        EndGameIfPlayerBusted(dealerCards, playerCards);
+                        return;
+                    }
+
+                    StandIfPlayerHasBlackjack(playerHasBlackjack);
+                    if (TurnDecision == TurnOptions.Stand) break;
+                }
+                else break;
+            }
+        }
+
+        BjWinCalculation(dealerCards, playerCards, gameDeck);
+    }
+
+    internal void BjWinCalculation(Hand dealerCards, Hand playerCards, Deck gameDeck)
+    {
+        var dealerHandValue = GetHandValue(dealerCards);
+
+        while (dealerHandValue &lt; 17)
+        {
+            DrawDealerCard(dealerCards, gameDeck);
+            dealerHandValue = GetHandValue(dealerCards);
+        }
+
+        var playerHandValue = GetHandValue(playerCards);
+        string resultMessage;
+
+        if (dealerHandValue &gt; 21 || playerHandValue &gt; dealerHandValue)
+        {
+            resultMessage = &quot;You Win!&quot;;
+        }
+        else if (dealerHandValue == playerHandValue)
+        {
+            resultMessage = &quot;It&#39;s a Push!&quot;;
+        }
+        else
+        {
+            resultMessage = &quot;You Lose!&quot;;
+        }
+
+        DisplayEndOfGameMessages(dealerCards, playerCards, resultMessage);
+    }
+
+    public string PrintHands(Hand dealerCards, Hand playerCards)
+    {
+        if (usingConsoleRenderer) {
+            _canvas.Clear();
+            _canvas.Render();
+            _canvas.CreateBorder();
+            _canvas.Text((_canvas.Width / 2 - 15), 2, &quot;Dealer&#39;s cards:&quot;);
+            _canvas.Text((_canvas.Width - dealerCards.ToString().Length) / 2, 3, dealerCards.ToString());
+            _canvas.Text((_canvas.Width - 11) / 2, 5, &quot;Your cards:&quot;);
+            _canvas.Text((_canvas.Width - playerCards.ToString().Length) / 2, 6, playerCards.ToString());
+            _canvas.Render();
+            return &quot;Used Canvas Renderer&quot;;
+        }
+        else {
+            var dealerHandText = PrintSingleHand(&quot;Dealer&#39;s cards:&quot;, dealerCards);
+            var playerHandText = PrintSingleHand(&quot;Your cards:&quot;,    playerCards);
+            return dealerHandText + playerHandText; 
+        }
+    }
+
+    public string PrintSingleHand(string heading, Hand hand) {
+        var handText = hand.ToString();
+        Console.WriteLine(heading);
+        Console.WriteLine(handText);
+        return handText;
+    }
+
+    private void EndGameIfPlayerBusted(Hand dealerCards, Hand playerCards)
+    {
+        if (usingConsoleRenderer) {
+        _canvas.Clear();
+        _canvas.CreateBorder();
+        _canvas.Text((_canvas.Width - 5) / 2, 8, &quot;BUST!&quot;);
+        }
+        else {
+            Console.WriteLine(&quot;BUST!&quot;);
+        }
+            
+        DisplayEndOfGameMessages(dealerCards, playerCards, &quot;You busted!&quot;);
+    }
+
+    private void DisplayEndOfGameMessages(Hand dealerCards, Hand playerCards, string result)
+    {
+        if (usingConsoleRenderer) {
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            dealerCards.RevealAll();
+            _canvas.Text((_canvas.Width - 12) / 2, 5, &quot;Final hands:&quot;);
+            _canvas.Text((_canvas.Width - 20) / 2, 6, &quot;Dealer&#39;s cards were:&quot;);
+            _canvas.Text((_canvas.Width - dealerCards.ToString().Length) / 2, 7, dealerCards.ToString());
+            _canvas.Text((_canvas.Width - 16) / 2, 8, &quot;Your cards were:&quot;);
+            _canvas.Text((_canvas.Width - playerCards.ToString().Length) / 2, 9, playerCards.ToString());
+            _canvas.Text((_canvas.Width - result.Length) / 2, 10, &quot;&quot;);
+            _canvas.Text((_canvas.Width - result.Length) / 2, 11, result);
+            _canvas.Text((_canvas.Width - 34) / 2, 12, &quot;Press any key to continue...&quot;);
+            _canvas.Render();
+
+            Console.ReadKey(intercept: true);
+        }
+        else {
+            dealerCards.RevealAll();
+            var output = result;
+            output += &quot;Final hands:\n&quot;;
+            output += &quot;Dealer&#39;s cards were:\n&quot;;
+            output += dealerCards+&quot;\n&quot;;
+            output += &quot;Your cards were:\n&quot;;
+            output += playerCards+&quot;\n&quot;;
+            Console.WriteLine(output);
+        }
+    }
+    
+    private static Deck SetUpNewGameDeck(Hand dealerCards, Hand playerCards) {
+        var gameDeck = new Deck();
+        gameDeck.Shuffle();
+        playerCards.Clear();
+        dealerCards.Clear();
+        return gameDeck;
+    }
+    
+    private static void DrawPlayerCards(Hand playerCards, Deck gameDeck) {
+        DrawCardForPlayer(playerCards, gameDeck);
+        DrawCardForPlayer(playerCards, gameDeck);
+    }
+    
+    private static void DrawCardForPlayer(Hand playerCards, Deck gameDeck) {
+        playerCards.Add(gameDeck.DrawCard());
+    }
+    
+    private static void DrawDealerCard(Hand dealerCards, Deck gameDeck) {
+        dealerCards.Add(gameDeck.DrawCard());
+    }
+    
+    private static void DrawDealerCardFaceDown(Hand dealerCards, Deck gameDeck) {
+        var faceDownDealerCard = gameDeck.DrawCard();
+        faceDownDealerCard.IsFaceUp = false;
+        dealerCards.Add(faceDownDealerCard);
+    }
+    
+    internal static int GetHandValue(Hand hand)
+    {
+        if (hand.Count &lt;= 1) throw new ArgumentException(&quot;Hand is too short, error.&quot;);
+        int handValue = 0;
+        int aceCount = 0;
+        foreach (Card c in hand)
+        {
+            if (c.Value == 14)
+            {
+                aceCount++;
+                handValue += 1;  
+            }
+            else if (c.Value &gt;= 11 &amp;&amp; c.Value &lt;= 13)
+                handValue += 10;
+            else
+                handValue += c.Value;
+        }
+        while (aceCount &gt; 0 &amp;&amp; handValue &lt;= 11)
+        {
+            handValue += 10;   
+            aceCount--;
+        }
+        return handValue;
+    }
+    
+    private void StandIfPlayerHasBlackjack(bool playerHasBlackjack) {
+        if (playerHasBlackjack)
+        {
+            if(usingConsoleRenderer) 
+                _canvas.Text((_canvas.Width - 34) / 2, 8, &quot;BLACKJACK! Automatically standing.&quot;);
+            else Console.WriteLine(&quot;21! You stand automatically.&quot;);
+            TurnDecision = TurnOptions.Stand;
+        }
+    }
+    
+   
+    
+    internal static bool Pushed(Hand dealerHand, Hand playerHand)
+    {
+        if (GetHandValue(dealerHand) == 21 &amp;&amp; GetHandValue(playerHand) == 21)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+
+
+    
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[17,5,17,47,0],[17,5,17,47,1],[18,31,18,35,1],[18,36,18,48,0],[18,53,18,63,0],[18,53,18,63,1],[19,31,19,35,1],[19,36,19,48,0],[19,53,19,63,0],[19,53,19,63,1],[21,5,21,61,1],[21,5,21,61,0],[23,5,23,48,0],[24,5,24,6,0],[26,9,26,26,0],[27,9,27,37,0],[28,9,28,69,0],[29,5,29,6,0],[31,5,31,27,1],[31,28,31,29,1],[32,9,32,38,1],[33,5,33,6,1],[36,5,36,6,1],[37,9,37,31,1],[38,5,38,6,1],[40,87,40,88,0],[41,13,41,14,0],[42,16,42,17,0],[43,17,43,41,0],[44,17,44,42,0],[45,17,45,75,0],[46,17,46,56,0],[47,17,47,55,0],[48,17,48,63,0],[49,17,49,67,0],[50,17,50,42,0],[51,13,51,14,0],[51,15,51,54,0],[51,54,51,90,0],[51,90,51,102,0],[52,9,52,10,0],[52,11,52,44,0],[52,45,52,46,0],[54,13,54,29,0],[55,13,55,36,0],[56,13,56,30,0],[57,13,57,19,0],[59,5,59,6,0],[62,5,62,6,1],[63,12,63,13,1],[64,13,64,37,1],[65,13,65,38,1],[66,13,66,71,1],[67,13,67,52,1],[68,13,68,51,1],[69,13,69,59,1],[70,13,70,63,1],[71,13,71,38,1],[72,9,72,10,1],[72,11,72,82,1],[73,5,73,6,1],[76,5,76,6,1],[77,9,77,34,1],[77,35,77,36,0],[78,13,78,29,0],[79,13,79,36,0],[80,13,80,80,0],[81,13,81,30,0],[82,9,82,10,0],[83,14,83,15,1],[84,13,84,58,1],[85,9,85,10,1],[86,5,86,6,1],[89,5,89,6,1],[90,9,90,34,1],[90,35,90,36,0],[91,13,91,29,0],[92,13,92,36,0],[93,13,93,94,0],[94,13,94,30,0],[95,9,95,10,0],[96,14,96,15,1],[97,13,97,70,1],[98,9,98,10,1],[99,5,99,6,1],[102,5,102,6,1],[103,9,103,34,1],[103,35,103,36,0],[104,13,104,29,0],[105,13,105,36,0],[106,13,106,85,0],[107,13,107,80,0],[108,13,108,82,0],[109,13,109,30,0],[112,13,112,60,0],[113,13,113,114,0],[114,9,114,10,0],[115,14,115,15,1],[116,13,116,61,1],[117,13,117,56,1],[118,13,118,58,1],[119,13,119,45,1],[120,13,120,31,1],[121,17,122,47,0],[124,17,125,49,1],[126,9,126,10,1],[127,5,127,6,1],[130,5,130,6,1],[131,9,131,21,1],[132,9,132,10,1],[133,13,133,37,1],[133,38,133,54,0],[134,13,134,50,1],[135,13,135,50,1],[136,13,136,61,1],[137,13,137,63,1],[138,13,138,36,1],[138,38,138,84,1],[139,13,139,51,1],[139,52,139,58,1],[141,13,141,38,1],[141,39,141,40,0],[142,17,142,88,0],[143,17,143,34,0],[145,17,145,67,0],[146,17,146,45,0],[146,46,146,47,0],[147,21,147,52,0],[148,21,148,62,0],[150,21,150,65,0],[151,21,151,46,0],[151,47,151,48,0],[152,25,152,73,0],[153,25,153,32,0],[155,17,155,18,0],[156,22,156,50,0],[156,51,156,52,0],[157,21,157,54,0],[158,21,158,27,0],[160,13,160,14,0],[162,18,162,19,1],[163,17,163,64,1],[164,17,164,49,1],[165,17,165,34,1],[165,35,165,66,1],[166,22,166,63,1],[166,64,166,97,1],[167,17,167,53,1],[167,54,167,55,1],[168,21,168,62,1],[169,21,169,65,1],[170,21,170,67,1],[171,21,171,41,1],[171,42,171,43,1],[172,25,172,73,1],[173,25,173,32,1],[176,21,176,67,0],[177,21,177,59,0],[177,60,177,66,0],[178,17,178,18,0],[179,22,179,28,1],[180,13,180,14,0],[181,9,181,10,0],[183,9,183,62,1],[184,5,184,6,1],[187,5,187,6,1],[188,9,188,57,1],[190,9,190,37,1],[191,9,191,10,1],[192,13,192,51,1],[193,13,193,57,1],[194,9,194,10,1],[196,9,196,57,1],[199,9,199,71,1],[200,9,200,10,1],[201,13,201,40,1],[202,9,202,10,1],[203,14,203,53,1],[204,9,204,10,1],[205,13,205,44,1],[206,9,206,10,1],[208,9,208,10,1],[209,13,209,41,1],[210,9,210,10,1],[212,9,212,75,1],[213,5,213,6,1],[216,5,216,6,1],[217,9,217,34,1],[217,35,217,36,0],[218,13,218,29,0],[219,13,219,30,0],[220,13,220,36,0],[221,13,221,74,0],[222,13,222,106,0],[223,13,223,70,0],[224,13,224,106,0],[225,13,225,30,0],[226,13,226,43,0],[228,14,228,15,1],[229,13,229,82,1],[230,13,230,81,1],[231,13,231,52,1],[233,5,233,6,1],[235,62,235,63,1],[236,9,236,40,1],[237,9,237,36,1],[238,9,238,37,1],[239,9,239,25,1],[240,5,240,6,1],[243,5,243,6,1],[244,9,244,34,1],[244,35,244,36,0],[245,9,245,25,0],[246,9,246,32,0],[247,9,247,59,0],[248,9,248,10,0],[249,14,249,15,1],[250,13,250,40,1],[251,9,251,10,1],[253,9,253,75,1],[254,5,254,6,1],[257,5,257,6,1],[258,9,258,34,1],[258,35,258,36,0],[259,13,259,29,0],[260,13,260,36,0],[261,13,261,37,0],[262,13,262,71,0],[263,13,263,79,0],[264,13,264,106,0],[265,13,265,75,0],[266,13,266,106,0],[267,13,267,71,0],[268,13,268,75,0],[269,13,269,88,0],[270,13,270,30,0],[272,13,272,46,0],[273,9,273,10,0],[274,14,274,15,1],[275,13,275,37,1],[276,13,276,33,1],[277,13,277,40,1],[278,13,278,48,1],[279,13,279,40,1],[280,13,280,44,1],[281,13,281,40,1],[282,13,282,39,1],[283,9,283,10,1],[284,5,284,6,1],[286,78,286,79,1],[287,9,287,35,1],[288,9,288,28,1],[289,9,289,29,1],[290,9,290,29,1],[291,9,291,25,1],[292,5,292,6,1],[294,74,294,75,1],[295,9,295,50,1],[296,9,296,50,1],[297,5,297,6,1],[299,76,299,77,1],[300,9,300,46,1],[301,5,301,6,1],[303,73,303,74,1],[304,9,304,46,1],[305,5,305,6,1],[307,81,307,82,1],[308,9,308,54,1],[309,9,309,45,1],[310,9,310,45,1],[311,5,311,6,1],[314,5,314,6,1],[315,9,315,29,1],[315,30,315,87,0],[316,9,316,27,1],[317,9,317,26,1],[318,9,318,16,1],[318,18,318,24,1],[318,25,318,27,1],[318,28,318,32,1],[319,9,319,10,1],[320,13,320,31,1],[321,13,321,14,1],[322,17,322,28,1],[323,17,323,32,1],[324,13,324,14,1],[325,18,325,53,1],[326,17,326,33,1],[328,17,328,38,1],[329,9,329,10,1],[330,9,330,48,1],[331,9,331,10,1],[332,13,332,29,1],[333,13,333,24,1],[334,9,334,10,1],[335,9,335,26,1],[336,5,336,6,1],[338,69,338,70,1],[339,9,339,32,1],[340,9,340,10,1],[341,13,341,37,1],[342,17,342,97,0],[343,18,343,68,1],[344,13,344,46,1],[345,9,345,10,1],[346,5,346,6,1],[351,5,351,6,1],[352,9,352,78,1],[353,9,353,10,1],[354,13,354,25,1],[356,9,356,22,1],[357,5,357,6,1]]);
+    </script>
+  </body>
+</html>

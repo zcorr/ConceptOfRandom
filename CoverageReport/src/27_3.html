@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/Utility Classes/SuitUtilities.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
+public static class SuitExtensions
+{
+    public static string ToSymbol(this Suit suit)
+    {
+        return suit switch
+        {
+            Suit.Spades   =&gt; &quot;♠&quot;,
+            Suit.Hearts   =&gt; &quot;♥&quot;,
+            Suit.Diamonds =&gt; &quot;♦&quot;,
+            Suit.Clubs    =&gt; &quot;♣&quot;,
+            _             =&gt; suit.ToString()
+        };
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[8,5,8,6,1],[9,9,11,30,1],[11,30,11,33,1],[11,33,12,30,1],[12,30,12,33,1],[12,33,13,30,1],[13,30,13,33,1],[13,33,14,30,1],[14,30,14,33,1],[14,33,15,30,1],[15,30,15,45,1],[15,45,16,11,1],[17,5,17,6,1]]);
+    </script>
+  </body>
+</html>

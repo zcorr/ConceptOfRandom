@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/Blackjack/HandDeckTests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Diagnostics.CodeAnalysis;
+using ConceptOfRandom;
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
+namespace ConceptOfRandomTests;
+
+public class CardsSuitsDeckTests
+{
+    [Fact]
+    public void BuildDeck_LengthIsRanksXSuits()
+    {
+        Deck deck = new Deck(); // Deck() calls BuildDeck()
+        int numRanks = Enum.GetValues(typeof(Rank)).Length;
+        int numSuits = Enum.GetValues(typeof(Suit)).Length;
+        Assert.Equal(deck.Count,numRanks * numSuits);
+    }
+    
+    [Fact]
+    public void DrawCard_DeckRemovesAndReturnsASingleCard()
+    {
+        var deck = new Deck();
+        var initialCount = deck.Count;
+        
+        Card drawnCard = deck.DrawCard();
+        
+        Assert.Equal(initialCount - 1, deck.Count);
+        Assert.DoesNotContain(drawnCard, deck.ToList());
+    }
+    
+    [Fact]
+    public void DrawCard_DeckEmpty()
+    {
+        Deck deck = new Deck();
+        while (deck.Count &gt; 0)
+            deck.DrawCard();
+        Assert.Throws&lt;InvalidOperationException&gt;(() =&gt; deck.DrawCard());
+    }
+    
+    [Fact]
+    public void Shuffle_PreservesNumCards()
+    {
+        var deck = new Deck();
+        deck.Shuffle();
+        Assert.Equal(Enum.GetValues(typeof(Rank)).Length*Enum.GetValues(typeof(Suit)).Length, deck.Count);
+    }
+
+    [Fact]
+    public void Shuffle_ChangesOrder_MostOfTheTime()
+    {
+        // Arrange
+        var deck = new Deck();
+        var original = deck.ToList();
+
+        // Act
+        deck.Shuffle();
+        var shuffled = deck.ToList();
+
+        // Assert: very unlikely to be the same exact sequence
+        Assert.NotEqual(original, shuffled);
+    }
+
+    [Fact]
+    public void Remove_RemovesCardsFromDeck()
+    {
+        var deck = new Deck();
+        var cardToRemove = deck.DrawCard();
+        var initialCount = deck.Count;
+
+        deck.Remove(cardToRemove);
+
+        Assert.DoesNotContain(cardToRemove, deck.ToList());
+    }
+    
+    [Fact]
+    public void Clear_RemovesAllCards()
+    {
+        var deck = new Deck();
+        while (deck.Count &gt; 0)
+            deck.DrawCard();
+        Assert.Equal(0, deck.Count);
+    }
+    
+    [Fact] void HandClear_RemovesAllCards()
+    {
+        var hand = new Hand();
+        var initialCount = hand.Count;
+        hand.Clear();
+        Assert.Equal(0, hand.Count);
+    }
+    
+    [Fact]
+    public void Print_ReturnsDeckString_NewlineSeparated()
+    {
+        // Arrange
+        var deck = new Deck();
+        var expected = string.Join(
+            Environment.NewLine,
+            deck.ToList().Select(c =&gt; c.ToString())
+        );
+
+        // Act
+        var printed = deck.Print();
+
+        // Assert
+        Assert.Equal(expected, printed);
+    }
+
+
+    
+    
+    
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[12,5,12,6,1],[13,9,13,32,1],[14,9,14,60,1],[15,9,15,60,1],[16,9,16,54,1],[17,5,17,6,1],[21,5,21,6,1],[22,9,22,31,1],[23,9,23,39,1],[25,9,25,42,1],[27,9,27,52,1],[28,9,28,57,1],[29,5,29,6,1],[33,5,33,6,1],[34,9,34,32,1],[35,9,35,31,1],[36,13,36,29,1],[37,9,37,56,1],[37,56,37,71,1],[37,71,37,73,1],[38,5,38,6,1],[42,5,42,6,1],[43,9,43,31,1],[44,9,44,24,1],[45,9,45,107,1],[46,5,46,6,1],[50,5,50,6,1],[52,9,52,31,1],[53,9,53,38,1],[56,9,56,24,1],[57,9,57,38,1],[60,9,60,45,1],[61,5,61,6,1],[65,5,65,6,1],[66,9,66,31,1],[67,9,67,44,1],[68,9,68,39,1],[70,9,70,35,1],[72,9,72,60,1],[73,5,73,6,1],[77,5,77,6,1],[78,9,78,31,1],[79,9,79,31,1],[80,13,80,29,1],[81,9,81,37,1],[82,5,82,6,1],[85,5,85,6,1],[86,9,86,31,1],[87,9,87,39,1],[88,9,88,22,1],[89,9,89,37,1],[90,5,90,6,1],[94,5,94,6,1],[96,9,96,31,1],[97,9,99,39,1],[99,39,99,51,1],[99,51,100,11,1],[103,9,103,36,1],[106,9,106,41,1],[107,5,107,6,1]]);
+    </script>
+  </body>
+</html>

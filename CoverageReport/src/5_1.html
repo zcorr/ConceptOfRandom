@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Individual APIs/Commit Messages/RandomCommitMessages.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConceptOfRandom.Models.API;
+
+public class RandomCommitMessages : APIModel {
+    public new readonly string Name = &quot;Random Commit Message&quot;;
+    private const string url = &quot;https://whatthecommit.com/index.txt&quot;;
+    private new readonly string Parameters = &quot;&quot;;
+    
+    public override async Task&lt;string&gt; Get() {
+        // implementation note: not using JSON here because quotes use apostrophes, which break JSON parsing.
+        string response = await APIClient.Instance.Fetch(url, Parameters);
+        return response;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[4,5,4,63,1],[6,5,6,49,1],[8,46,8,47,1],[10,9,10,75,1],[11,9,11,25,1],[12,5,12,6,1]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/BotTest.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.DiceGames;
+
+namespace ConceptOfRandomTests.SimulationTests;
+
+public class BotTest
+{
+    [Fact]
+    public void AssertBotNameOnCreation()
+    {
+        string name = &quot;Bot 1&quot;;
+        
+        Bot bot = new Bot(name);
+        
+        Assert.Equal(name, bot.name);
+    }
+
+    [Fact]
+    public void AssertBetPlacement()
+    {
+        Bot bot = new Bot(&quot;Bot 1&quot;);
+        Pot pot = new Pot();
+
+        int betted = bot.PlaceBet(pot, 10);
+        
+        Assert.Equal(betted, pot.balance);
+    }
+
+    [Fact]
+    public void AssertReceiveWinnings()
+    {
+        Bot bot = new Bot(&quot;Bot 1&quot;);
+        
+        int startingBalance = bot.GetPlayerBalance();
+        
+        bot.ReceiveWinnings(100);
+        
+        Assert.Equal(startingBalance + 100, bot.GetPlayerBalance());
+    }
+
+    [Fact]
+    public void AssertShowBotBalance()
+    {
+        Bot bot = new Bot(&quot;Bot 1&quot;);
+        
+        int startingBalance = bot.GetPlayerBalance();
+        
+        Assert.Equal($&quot;Bot 1&#39;s balance: ${startingBalance}&quot;, bot.ShowBalance());
+    }
+
+    [Fact]
+    public void AssertRandomBetGeneration()
+    {
+        Bot bot = new Bot(&quot;Bot 1&quot;);
+
+        int randomBet = bot.GenerateRandomBet();
+        
+        Assert.True(randomBet &gt; 187 &amp;&amp; randomBet &lt; 1350);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,6,1],[10,9,10,31,1],[12,9,12,33,1],[14,9,14,38,1],[15,5,15,6,1],[19,5,19,6,1],[20,9,20,36,1],[21,9,21,29,1],[23,9,23,44,1],[25,9,25,43,1],[26,5,26,6,1],[30,5,30,6,1],[31,9,31,36,1],[33,9,33,54,1],[35,9,35,34,1],[37,9,37,69,1],[38,5,38,6,1],[42,5,42,6,1],[43,9,43,36,1],[45,9,45,54,1],[47,9,47,81,1],[48,5,48,6,1],[52,5,52,6,1],[53,9,53,36,1],[55,9,55,49,1],[57,9,57,58,1],[58,5,58,6,1]]);
+    </script>
+  </body>
+</html>

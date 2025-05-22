@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Weather/RandomWeather.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace ConceptOfRandom.Models.API;
+
+public class RandomWeather : APIModel {
+    public new readonly string Name = &quot;Weather&quot;;
+    private const string url = &quot;https://goweather.xyz/weather/&quot;;
+    public new string Parameters;
+
+    public class WeatherForecast
+    {
+        [JsonPropertyName(&quot;temperature&quot;)]
+        public string Temperature { get; init; }
+
+        [JsonPropertyName(&quot;wind&quot;)]
+        public string Wind { get; init; }
+
+        [JsonPropertyName(&quot;description&quot;)]
+        public string Description { get; init; }
+
+        [JsonPropertyName(&quot;forecast&quot;)]
+        public List&lt;ForecastDay&gt; Forecast { get; init; }
+    }
+
+    public class ForecastDay
+    {
+        [JsonPropertyName(&quot;day&quot;)]
+        public string Day { get; set; }
+
+        [JsonPropertyName(&quot;temperature&quot;)]
+        public string Temperature { get; set; }
+
+        [JsonPropertyName(&quot;wind&quot;)]
+        public string Wind { get; set; }
+    }
+
+    
+    public override async Task&lt;string&gt; Get() {
+        string location = LocationReader.GetRandomLocationFromFile();
+        string response = await APIClient.Instance.Fetch(url+location, Parameters);
+        WeatherForecast forecast = JsonSerializer.Deserialize&lt;WeatherForecast&gt;(response)!;
+        return &quot;Weather in &quot; + location + &quot; is &quot; + forecast.Forecast[0].Temperature;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[7,5,7,49,1],[14,37,14,41,1],[14,42,14,47,1],[17,30,17,34,1],[17,35,17,40,1],[20,37,20,41,1],[20,42,20,47,1],[23,45,23,49,1],[23,50,23,55,1],[29,29,29,33,1],[29,34,29,38,1],[32,37,32,41,1],[32,42,32,46,1],[35,30,35,34,1],[35,35,35,39,1],[39,46,39,47,1],[40,9,40,70,1],[41,9,41,84,1],[42,9,42,91,1],[43,9,43,85,1],[44,5,44,6,1]]);
+    </script>
+  </body>
+</html>

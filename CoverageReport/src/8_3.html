@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/View/Games/WaveIntegration.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.View;
+using ConsoleRenderer;
+
+namespace ConceptOfRandom.view;
+
+public class WaveIntegration : MenuOutline {
+	private ConsoleCanvas _canvas;
+
+	public WaveIntegration() {
+		_canvas = GetCanvas(); // Initialize the canvas using the inherited method
+	}
+
+	public void Wave() {
+		var waveText = &quot;Wave Animation!&quot;;
+		var waveTextX = (_canvas.Width - waveText.Length) / 2;
+
+		var startTime = DateTime.Now;
+
+		var amplitude = 1.5;
+		var frequency = 0.2;
+		var wavePeriod = (2 * Math.PI) / frequency;
+		var waveDuration = TimeSpan.FromSeconds(wavePeriod);
+
+		while ((DateTime.Now - startTime) &lt; waveDuration) {
+			var currentTime = DateTime.Now;
+			_canvas.Clear();
+			_canvas.CreateBorder();
+
+			for (int i = 0; i &lt; waveText.Length; i++) {
+				int x = waveTextX + i;
+				int y = (int)(Math.Sin((i * frequency) + (currentTime.Ticks / 10000000.0)) * amplitude + 4);
+				_canvas.Set(x, y, waveText[i], ConsoleColor.White, ConsoleColor.Black);
+			}
+
+			_canvas.Render();
+			System.Threading.Thread.Sleep(100);
+		}
+
+		// Clear the canvas and reset for the next Tick() call
+		_canvas.Clear();
+		_canvas.CreateBorder();
+		RenderMenu();
+		_canvas.Render();
+	}
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,2,9,26,0],[9,27,9,28,0],[10,3,10,25,0],[11,2,11,3,0],[13,21,13,22,0],[14,3,14,36,0],[15,3,15,57,0],[17,3,17,32,0],[19,3,19,23,0],[20,3,20,23,0],[21,3,21,46,0],[22,3,22,55,0],[24,3,24,52,0],[24,53,24,54,0],[25,4,25,35,0],[26,4,26,20,0],[27,4,27,27,0],[29,9,29,18,0],[29,20,29,39,0],[29,41,29,44,0],[29,46,29,47,0],[30,5,30,27,0],[31,5,31,97,0],[32,5,32,76,0],[33,4,33,5,0],[35,4,35,21,0],[36,4,36,39,0],[37,3,37,4,0],[40,3,40,19,0],[41,3,41,26,0],[42,3,42,16,0],[43,3,43,20,0],[44,2,44,3,0]]);
+    </script>
+  </body>
+</html>

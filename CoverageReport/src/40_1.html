@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/View/Games/DiceIntegration.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation;
+using ConceptOfRandom.View;
+using ConceptOfRandom.Models.Simulation.DiceGames;
+
+namespace ConceptOfRandom.view;
+
+public class DiceIntegration : MenuOutline
+{
+    public DiceIntegration()
+    {
+        var canvas = this;
+    }
+    public void StartDice()
+    {
+        // Clearing canvas to set up visuals for dice game
+        Clear();
+        CreateBorder();
+
+        // User input asking for how many sided die they want to roll
+        Text((Width - 61) / 2, 2, &quot;How many sides does the die have? (e.g. 6 for a standard die)&quot;);
+        Render();
+        
+        
+        if (!int.TryParse(Console.ReadLine(), out int sides) || sides &lt;= 0)
+        {
+            Text((Width - 46) / 2, 4, &quot;Invalid input. Please enter a positive number.&quot;);
+            Render();
+            Console.ReadKey(true);
+            return;
+        }
+        
+        
+        // Calling game -
+        if (sides &gt; 2)
+        {
+            var game = new Dice(sides);
+            int result = game.Roll();
+            Text((Width - (result.ToString().Length + sides.ToString().Length + 30)) / 2, 4, $&quot;You rolled a {result} on a {sides}-sided die.&quot;);
+            Text((Width - 28) / 2, 6, &quot;Press any key to continue...&quot;);
+            Render();
+        }
+        else
+        {
+            var game = new Coin();
+            int result = game.Roll();
+            Text((Width - 32) / 2, 4, $&quot;You flipped a coin and got {(result == 1 ? &quot;Heads&quot; : &quot;Tails&quot;)}.&quot;);
+            Text((Width - 28) / 2, 6, &quot;Press any key to continue...&quot;);
+            Render();
+        }
+        
+        Console.ReadKey(true);
+        Clear();
+        CreateBorder();
+        RenderMenu();
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,29,0],[10,5,10,6,0],[11,9,11,27,0],[12,5,12,6,0],[14,5,14,6,0],[16,9,16,17,0],[17,9,17,24,0],[20,9,20,100,0],[21,9,21,18,0],[24,9,24,76,0],[25,9,25,10,0],[26,13,26,89,0],[27,13,27,22,0],[28,13,28,35,0],[29,13,29,20,0],[34,9,34,23,0],[35,9,35,10,0],[36,13,36,40,0],[37,13,37,38,0],[38,13,38,144,0],[39,13,39,71,0],[40,13,40,22,0],[41,9,41,10,0],[43,9,43,10,0],[44,13,44,35,0],[45,13,45,38,0],[46,13,46,107,0],[47,13,47,71,0],[48,13,48,22,0],[49,9,49,10,0],[51,9,51,31,0],[52,9,52,17,0],[53,9,53,24,0],[54,9,54,22,0],[55,5,55,6,0]]);
+    </script>
+  </body>
+</html>

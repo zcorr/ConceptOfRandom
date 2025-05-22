@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/API/Weather/LocationReader.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+
+namespace ConceptOfRandom.Models.API;
+
+public static class LocationReader {
+    public static string GetRandomLocationFromFile() {
+        string path = Path.Combine(Directory.GetCurrentDirectory(), &quot;Models/API/Weather/WeatherLocations.txt&quot;);
+        string[] lines = File.ReadAllLines(path);
+        return lines[Random.Shared.Next(0, lines.Length)];
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[6,54,6,55,1],[7,9,7,112,1],[8,9,8,50,1],[9,9,9,59,1],[10,5,10,6,1]]);
+    </script>
+  </body>
+</html>

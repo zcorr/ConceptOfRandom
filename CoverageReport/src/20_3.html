@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/DiceGames/Pot.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+namespace ConceptOfRandom.Models.Simulation.DiceGames;
+
+public class Pot : IMoneyManagement
+{
+    public int balance { get; private set; }
+
+    public Pot()
+    {
+        balance = 0;
+    }
+
+    public int Pay(int amount)
+    {
+        balance -= amount;
+        return amount;
+    }
+
+    public void Receive(int amount)
+    {
+        balance += amount;
+    }
+
+    public string ShowBalance()
+    {
+        return $&quot;Pot amount: ${balance}&quot;;
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[5,26,5,30,1],[5,31,5,43,1],[7,5,7,17,1],[8,5,8,6,1],[9,9,9,21,1],[10,5,10,6,1],[13,5,13,6,1],[14,9,14,27,1],[15,9,15,23,1],[16,5,16,6,1],[19,5,19,6,1],[20,9,20,27,1],[21,5,21,6,1],[24,5,24,6,1],[25,9,25,42,1],[26,5,26,6,1]]);
+    </script>
+  </body>
+</html>

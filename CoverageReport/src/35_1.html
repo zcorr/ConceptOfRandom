@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Timer/TimerObserver.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.view;
+
+namespace ConceptOfRandom.Models.Simulation.Timer;
+
+public class TimerObserver : IObserver&lt;TimerStatus&gt; {
+    
+    public event Action&lt;TimerStatus&gt; TimerStatusChanged;
+    public void OnNext(TimerStatus status)
+    {
+        TimerStatusChanged?.Invoke(status);    
+    }
+
+    public void OnError(Exception error) {
+        TimerStatusChanged?.Invoke(TimerStatus.NotStarted);
+    }
+
+    public void OnCompleted() {
+        TimerStatusChanged?.Invoke(TimerStatus.Completed);
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[9,5,9,6,1],[10,9,10,44,1],[11,5,11,6,1],[13,42,13,43,1],[14,9,14,60,1],[15,5,15,6,1],[17,31,17,32,1],[18,9,18,59,1],[19,5,19,6,1]]);
+    </script>
+  </body>
+</html>

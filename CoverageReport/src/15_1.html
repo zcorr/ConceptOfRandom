@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/Display Strategy/WordDisplayStrategy.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
+public class WordDisplayStrategy : ICardDisplayStrategy
+{
+    public string GetDisplay(Card card)
+    {
+        return card.IsFaceUp ? $&quot;{card.Rank} of {card.Suit}&quot; : &quot;????&quot;;
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[7,5,7,6,1],[8,9,8,71,1],[9,5,9,6,1]]);
+    </script>
+  </body>
+</html>

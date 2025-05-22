@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/CoinTest.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Reflection;
+using ConceptOfRandom.Models.Simulation;
+
+namespace ConceptOfRandomTests.SimulationTests;
+
+public class CoinTest
+{
+    [Fact]
+    public void AssertCoinCreation()
+    {
+        Coin coin = new Coin();
+        
+        Assert.NotNull(coin);
+    }
+
+    [Fact]
+    public void AssertRollRange()
+    {
+        Coin coin = new Coin();
+
+        for (int i = 0; i &lt; 25; i++)
+        {   
+            int roll = coin.Roll();
+            Assert.True(roll == 1 || roll == 2);
+        }
+    }
+
+    [Fact]
+    public void AssertToStringAfterHeadsRoll()
+    {
+        Coin coin = new Coin();
+
+        coin.lastRoll = 1;
+        
+        Assert.Equal(&quot;Heads.&quot;, coin.ToString());
+    }
+    
+    [Fact]
+    public void AssertToStringAfterTailsRoll()
+    {
+        Coin coin = new Coin();
+
+        coin.lastRoll = 2;
+        
+        Assert.Equal(&quot;Tails.&quot;, coin.ToString());
+    }
+    
+    [Fact]
+    public void AssertToStringNoRoll()
+    {
+        Coin coin = new Coin();
+        
+        Assert.Equal(&quot;Coin hasn&#39;t been flipped yet.&quot;, coin.ToString());
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,1],[11,9,11,32,1],[13,9,13,30,1],[14,5,14,6,1],[18,5,18,6,1],[19,9,19,32,1],[21,14,21,23,1],[21,25,21,31,1],[21,33,21,36,1],[22,9,22,10,1],[23,13,23,36,1],[24,13,24,49,1],[25,9,25,10,1],[26,5,26,6,1],[30,5,30,6,1],[31,9,31,32,1],[33,9,33,27,1],[35,9,35,49,1],[36,5,36,6,1],[40,5,40,6,1],[41,9,41,32,1],[43,9,43,27,1],[45,9,45,49,1],[46,5,46,6,1],[50,5,50,6,1],[51,9,51,32,1],[53,9,53,72,1],[54,5,54,6,1]]);
+    </script>
+  </body>
+</html>

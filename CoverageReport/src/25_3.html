@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Dice.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System.Runtime.CompilerServices;
+
+namespace ConceptOfRandom.Models.Simulation;
+
+public class Dice : IRandomGenerator
+{
+    private Random rand = new Random();
+    public int sides { get; }
+    public int lastRoll { get; set; }
+
+    public Dice(int sides)
+    {   
+        if (sides &lt; 3)
+            throw new ArgumentException(&quot;Dice must have at least 3 sides.&quot;);
+        
+        this.sides = sides;
+    }
+
+    public int Roll()
+    {
+        lastRoll = rand.Next(1, this.sides + 1);
+        return lastRoll;
+    }
+
+    public override string ToString()
+    {
+        if (lastRoll == 0)
+        {
+            return $&quot;d{sides} hasn&#39;t been rolled yet.&quot;;
+        }
+
+        return $&quot;d{sides} rolled a {lastRoll}.&quot;;
+    }   
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[7,5,7,40,1],[8,24,8,28,1],[9,27,9,31,1],[9,32,9,36,1],[11,5,11,27,1],[12,5,12,6,1],[13,9,13,23,1],[14,13,14,77,1],[16,9,16,28,1],[17,5,17,6,1],[20,5,20,6,1],[21,9,21,49,1],[22,9,22,25,1],[23,5,23,6,1],[26,5,26,6,1],[27,9,27,27,1],[28,9,28,10,1],[29,13,29,56,1],[32,9,32,49,1],[33,5,33,6,1]]);
+    </script>
+  </body>
+</html>

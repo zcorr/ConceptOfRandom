@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandom/Models/Simulation/Blackjack/Utility Classes/GameUtilities.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.view;
+
+namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
+using ConceptOfRandom.Models.Simulation.Blackjack;
+
+public abstract class GameUtilities
+{
+    public static bool IsPlayAgain(Func&lt;ConsoleKey&gt; getKey, IConsoleCanvas canvas)
+    {
+        while (true)
+        {
+            canvas.Clear();
+            
+            canvas.Text(2, 2, &quot;Would you like to play again? (Y/N)&quot;);
+            canvas.Render();
+            var key = getKey();
+
+            if (key == ConsoleKey.Y)
+            {
+                return true;
+            }
+            else if (key == ConsoleKey.N) {
+                canvas.Clear();
+                canvas.Render();
+                throw new ReturnToMainMenuException();
+            }
+            else
+            {
+                canvas.Text(2, 2, &quot;Invalid input. Please enter &#39;Y&#39; or &#39;N&#39;.&quot;);
+            }
+        }
+    }
+    
+    public static bool IsPlayAgain(Func&lt;string?&gt; readLine, Action&lt;string&gt; writeLine)
+    {
+        string? input = readLine();
+        
+        if (input == &quot;Y&quot;)
+        {
+            writeLine(&quot;Game starting...&quot;);
+            return true;
+        }
+        else if (input == &quot;N&quot;)
+        {
+            writeLine(&quot;Thanks for playing!&quot;);
+            return false;
+        }
+        else
+        {
+            writeLine(&quot;Incorrect Input!&quot;);
+            writeLine(&quot;Would you like to play again? (Y/N)&quot;);
+            return IsPlayAgain(readLine, writeLine);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,0],[11,9,11,21,0],[12,9,12,10,0],[13,13,13,28,0],[15,13,15,70,0],[16,13,16,29,0],[17,13,17,32,0],[19,13,19,37,0],[20,13,20,14,0],[21,17,21,29,0],[23,18,23,42,0],[23,43,23,44,0],[24,17,24,32,0],[25,17,25,33,0],[26,17,26,55,0],[29,13,29,14,0],[30,17,30,78,0],[31,13,31,14,0],[32,9,32,10,0],[33,5,33,6,0],[36,5,36,6,1],[37,9,37,36,1],[39,9,39,26,1],[40,9,40,10,1],[41,13,41,43,1],[42,13,42,25,1],[44,14,44,31,1],[45,9,45,10,1],[46,13,46,46,1],[47,13,47,26,1],[50,9,50,10,1],[51,13,51,43,1],[52,13,52,62,1],[53,13,53,53,1],[55,5,55,6,1]]);
+    </script>
+  </body>
+</html>

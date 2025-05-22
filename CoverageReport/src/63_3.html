@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>/Users/joshuaharlev/RiderProjects/ConceptOfRandom/ConceptOfRandomTests/SimulationTests/Blackjack/SuitsRanksTests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
+using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+
+namespace ConceptOfRandomTests;
+
+public class SuitsRanksTests
+{
+    [Fact]
+    public void ToSymbol_WithUndefinedRank_ReturnsEnumToString()
+    {
+        // Arrange: pick a value outside the defined Rank enum members
+        var undefinedRank = (Rank)999;
+        var expected = undefinedRank.ToString();
+
+        // Act
+        var symbol = undefinedRank.ToSymbol();
+
+        // Assert
+        Assert.Equal(expected, symbol);
+    }
+    [Theory]
+    [InlineData(Suit.Spades,   &quot;♠&quot;)]
+    [InlineData(Suit.Hearts,   &quot;♥&quot;)]
+    [InlineData(Suit.Diamonds, &quot;♦&quot;)]
+    [InlineData(Suit.Clubs,    &quot;♣&quot;)]
+    public void ToSymbol_KnownSuits_ReturnsCorrectSymbol(Suit suit, string expected)
+    {
+        // Act
+        var symbol = suit.ToSymbol();
+
+        // Assert
+        Assert.Equal(expected, symbol);
+    }
+
+    [Fact]
+    public void ToSymbol_UndefinedSuit_ReturnsEnumName()
+    {
+        // Arrange
+        var undefined = (Suit)999;
+        var expected  = undefined.ToString();
+
+        // Act
+        var symbol = undefined.ToSymbol();
+
+        // Assert
+        Assert.Equal(expected, symbol);
+    }
+
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[10,5,10,6,1],[12,9,12,39,1],[13,9,13,49,1],[16,9,16,47,1],[19,9,19,40,1],[20,5,20,6,1],[27,5,27,6,1],[29,9,29,38,1],[32,9,32,40,1],[33,5,33,6,1],[37,5,37,6,1],[39,9,39,35,1],[40,9,40,46,1],[43,9,43,43,1],[46,9,46,40,1],[47,5,47,6,1]]);
+    </script>
+  </body>
+</html>
