@@ -5,6 +5,11 @@
 - Resize the console as desired and press run!
 - Navigate the menu using arrow keys, numbers, and the return/enter key.
 
+## Usage Notes / Known Issues
+- If any page does not render, main menu included, press one of the up/down arrow keys to re-render.
+- After selecting an API call, the system may take time before displaying your response. To force a re-render, press the enter key.
+- The Weather API may take a long time occasionally. This seems to be a caching issue for the API itself, as the weather calls speed up the more you've done them.
+
 ## Design Decisions, Architecture, Singleton, Observer, and Strategy.
 For our project, we wanted to use real data, and to design a project that wouldn't quickly get out of hand. It was supposed to be composed of two parts: local simulations, things like choosing from a list or rolling a die, and API usage, things like getting random facts or quotes. Then, we'd add another level of randomness and allow for individual elements to be randomly chosen. Basically, we wanted to perform a random operation. This would allow for a relatively easy separation of concerns; API integration would be separate from simulations, and those would compose our model.
 
