@@ -1,5 +1,3 @@
-using ConceptOfRandom.view;
-
 namespace ConceptOfRandom.Models.Simulation.Timer;
 
 public class TimerObserver : IObserver<TimerStatus> {

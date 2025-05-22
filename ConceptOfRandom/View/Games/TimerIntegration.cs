@@ -1,6 +1,5 @@
 ﻿using ConceptOfRandom.Models.Simulation.Timer;
 using ConceptOfRandom.View;
-using System.Threading;
 
 namespace ConceptOfRandom.view;
 

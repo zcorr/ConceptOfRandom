@@ -2,8 +2,6 @@ using ConceptOfRandom.view;
 
 namespace ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
-using ConceptOfRandom.Models.Simulation.Blackjack;
-
 public abstract class GameUtilities
 {
     public static bool IsPlayAgain(Func<ConsoleKey> getKey, IConsoleCanvas canvas)

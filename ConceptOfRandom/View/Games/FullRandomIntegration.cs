@@ -1,5 +1,4 @@
-﻿using System;
-using ConceptOfRandom.view;
+﻿using ConceptOfRandom.view;
 
 namespace ConceptOfRandom.View.Games
 {

@@ -1,9 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using ConceptOfRandom.View;
-
-namespace ConceptOfRandom;
-using ConceptOfRandom.View;
-using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+﻿namespace ConceptOfRandom;
 
 class Program
 {

@@ -1,5 +1,4 @@
-﻿using ConsoleRenderer;
-using ConceptOfRandom.Models.Simulation.Blackjack;
+﻿using ConceptOfRandom.Models.Simulation.Blackjack;
 using ConceptOfRandom.View;
 
 namespace ConceptOfRandom.view;

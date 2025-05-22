@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace ConceptOfRandom.Models.Simulation;
 
 public class Dice : IRandomGenerator

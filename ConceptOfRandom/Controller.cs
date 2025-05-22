@@ -1,7 +1,6 @@
 using ConceptOfRandom.view;
 using ConceptOfRandom.View;
 using ConceptOfRandom.View.Games;
-using ConceptOfRandom.View.Games;
 
 namespace ConceptOfRandom;
 
