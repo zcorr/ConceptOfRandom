@@ -3,9 +3,10 @@ using System.Timers;
 namespace ConceptOfRandom.Models.Simulation.Timer;
 
 public class TimerTracker: IObservable<TimerStatus> {
+    private const int DEFAULT_INTERVAL = 2000;
     private List<IObserver<TimerStatus>> observers;
     private readonly System.Timers.Timer timer;
-    public TimerTracker(double intervalInMilliseconds = 2000) {
+    public TimerTracker(double intervalInMilliseconds = DEFAULT_INTERVAL) {
         observers = new List<IObserver<TimerStatus>>();
         timer = new System.Timers.Timer(intervalInMilliseconds);
         timer.Elapsed += OnTimedEvent;
