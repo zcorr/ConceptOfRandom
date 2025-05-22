@@ -1,5 +1,6 @@
 using ConceptOfRandom.view;
 using ConceptOfRandom.View;
+using ConceptOfRandom.View.Games;
 
 namespace ConceptOfRandom;
 
@@ -67,18 +68,19 @@ public class Controller {
 				new BlackjackIntegration().StartGame();
 				break;
 			case 1:
-				// DiceRoll logic
+				new DiceIntegration().StartDice();
 				break;
 			case 2:
-				new RandomFact().StartFacts();
+				new RandomFactIntegration().StartFacts();
 				break;
 			case 3:
-				new WaveAnimation().Wave();
+				new WaveIntegration().Wave();
 				break;
 			case 4:
 				new TimerIntegration().StartTimer();
 				break;
 			case 5:
+				new FullRandomIntegration().ExecuteRandomGame();
 				break;
 			case 6:
 				Environment.Exit(0);
