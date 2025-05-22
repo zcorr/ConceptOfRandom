@@ -14,12 +14,6 @@ public class MenuTest1 {
 		_mockCanvas.Received(1).Render();
 	}
 	
-	[Fact]
-	public void TestTick()
-	{
-		_mockCanvas.Tick();
-		_mockCanvas.Received(1).Tick();
-	}
 
 	[Fact]
 	public void TestCreateBorder() {

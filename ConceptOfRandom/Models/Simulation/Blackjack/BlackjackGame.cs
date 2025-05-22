@@ -3,6 +3,8 @@ using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
 using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
 using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
+using ConceptOfRandom.view;
+using ConceptOfRandom.View;
 using ConsoleRenderer;
 
 [assembly: InternalsVisibleTo("ConceptOfRandomTests")]
@@ -11,14 +13,15 @@ namespace ConceptOfRandom.Models.Simulation.Blackjack;
 
 public class BlackjackGame
 {
-    private readonly ConsoleCanvas _canvas;
+    private readonly IConsoleCanvas _canvas;
     private static readonly Hand PlayerCards = new Hand();
     private static readonly Hand DealerCards = new Hand();
     private static readonly Deck GameDeck;
     private static TurnOptions turnDecision = TurnOptions.Undefined;
 
-    public BlackjackGame(ConsoleCanvas canvas)
+    public BlackjackGame(IConsoleCanvas canvas)
     {
+        
         _canvas = canvas;
         StartBlackjackGame(DealerCards, PlayerCards);
     }
@@ -28,20 +31,26 @@ public class BlackjackGame
         GameDeck = new Deck();
     }
 
-    public void StartBlackjackGame(Hand dealerCards, Hand playerCards)
-    {
-        do {
-            DisplayWelcomeMessage();
-            AskUserForDisplayStyle();
-            var gameDeck = SetUpNewGameDeck(dealerCards, playerCards);
-            DrawPlayerCards(playerCards, gameDeck);
-            DrawDealerCard(dealerCards, gameDeck);
-            DrawDealerCardFaceDown(dealerCards, gameDeck);
-            PlayBlackjack(dealerCards, playerCards, gameDeck);
-            DisplayPlayAgainPrompt();
-        } while (GameUtilities.IsPlayAgain(() => Console.ReadKey(intercept: true).Key, text => _canvas.Text(2, 2, text)));
+    public void StartBlackjackGame(Hand dealerCards, Hand playerCards) {
+        try {
+            do {
+                DisplayWelcomeMessage();
+                AskUserForDisplayStyle();
+                var gameDeck = SetUpNewGameDeck(dealerCards, playerCards);
+                DrawPlayerCards(playerCards, gameDeck);
+                DrawDealerCard(dealerCards, gameDeck);
+                DrawDealerCardFaceDown(dealerCards, gameDeck);
+                PlayBlackjack(dealerCards, playerCards, gameDeck);
+                DisplayPlayAgainPrompt();
+            } while (GameUtilities.IsPlayAgain(() => Console.ReadKey(intercept: true).Key, _canvas));
+        } catch (ReturnToMainMenuException) {
+            // Clear canvas and exit gracefully
+            _canvas.Clear();
+            _canvas.CreateBorder();
+            _canvas.Render();
+            throw; // Re-throw to propagate to the main menu
+        }
     }
-
     private void DisplayWelcomeMessage()
     {
         _canvas.Clear();

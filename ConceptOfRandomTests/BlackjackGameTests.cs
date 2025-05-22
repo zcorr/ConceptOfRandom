@@ -4,8 +4,31 @@ using ConceptOfRandom.Models.Simulation.Blackjack;
 using ConceptOfRandom.Models.Simulation.Blackjack.Display_Strategy;
 using ConceptOfRandom.Models.Simulation.Blackjack.Enums;
 using ConceptOfRandom.Models.Simulation.Blackjack.Objects;
+using ConsoleRenderer;
+using ConceptOfRandom.view;
 
 namespace ConceptOfRandomTests;
+
+public class ConsoleCanvasAdapter : IConsoleCanvas
+{
+    private readonly ConsoleCanvas _consoleCanvas;
+
+    public ConsoleCanvasAdapter(ConsoleCanvas consoleCanvas)
+    {
+        _consoleCanvas = consoleCanvas;
+    }
+
+    public void Render() => _consoleCanvas.Render();
+    public void CreateBorder() => _consoleCanvas.CreateBorder();
+    public bool AutoResize
+    {
+        get => _consoleCanvas.AutoResize;
+        set => _consoleCanvas.AutoResize = value;
+    }
+    public void Clear() => _consoleCanvas.Clear();
+    public void Text(int x, int y, string text) => _consoleCanvas.Text(x, y, text);
+    public int Width => _consoleCanvas.Width;
+}
 
 public class BlackjackGameTests
 {
@@ -46,6 +69,7 @@ public class BlackjackGameTests
     [Fact]
     public void DealerBusts_PlayerWins()
     {
+        var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
         var originalStrategy = CardDisplay.Current;
         CardDisplay.Current = new SymbolDisplayStrategy();
 
@@ -66,7 +90,7 @@ public class BlackjackGameTests
             new Card(Rank.Ten, Suit.Clubs)
         };
 
-        var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+        var game = new BlackjackGame(canvas);
         var output = CaptureConsoleOut(() =>
             game.BjWinCalculation(dealer, player, deck));
 
@@ -77,6 +101,7 @@ public class BlackjackGameTests
     [Fact]
     public void BjWinCalculation_DealerBeatsPlayer()
     {
+        var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
         var originalStrategy = CardDisplay.Current;
         CardDisplay.Current = new SymbolDisplayStrategy();
 
@@ -96,7 +121,7 @@ public class BlackjackGameTests
         {
             new Card(Rank.Two, Suit.Clubs)
         };
-        var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+        var game = new BlackjackGame(canvas);
         var output = CaptureConsoleOut(() =>
             game.BjWinCalculation(dealer, player, deck));
 
@@ -107,6 +132,7 @@ public class BlackjackGameTests
     [Fact]
     public void BjWinCalculation_IsPushBJvsBJ()
     {
+        var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
         var originalStrategy = CardDisplay.Current;
         CardDisplay.Current = new SymbolDisplayStrategy();
 
@@ -124,7 +150,7 @@ public class BlackjackGameTests
 
         var deck = new Deck();
 
-        var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+        var game = new BlackjackGame(canvas);
         var output = CaptureConsoleOut(() =>
             game.BjWinCalculation(dealerCards, playerCards, deck));
         
@@ -137,6 +163,7 @@ public class BlackjackGameTests
     [Fact]
     public void BjWinCalculation_PlayerBeatsDealer_PrintsYouWin()
     {
+        var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
         var originalStrategy = CardDisplay.Current;
         CardDisplay.Current = new SymbolDisplayStrategy();
 
@@ -154,7 +181,7 @@ public class BlackjackGameTests
 
         var deck = new Deck();
 
-        var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+        var game = new BlackjackGame(canvas);
         var output = CaptureConsoleOut(() =>
             game.BjWinCalculation(dealer, player, deck));
         
@@ -166,6 +193,7 @@ public class BlackjackGameTests
     [Fact]
     public void BjWinCalculation_MidLoopPush_ReturnsWithoutWinOrLose()
     {
+        var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
         var originalStrategy = CardDisplay.Current;
         CardDisplay.Current = new SymbolDisplayStrategy();
 
@@ -186,7 +214,7 @@ public class BlackjackGameTests
             new Card(Rank.Six, Suit.Clubs)
         };
 
-        var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+        var game = new BlackjackGame(canvas);
         var output = CaptureConsoleOut(() =>
             game.BjWinCalculation(dealer, player, deck));
 
@@ -223,7 +251,8 @@ public class BlackjackGameTests
 
         try
         {
-            var game = new BlackjackGame(new ConsoleRenderer.ConsoleCanvas());
+            var canvas = new ConsoleCanvasAdapter(new ConsoleCanvas());
+            var game = new BlackjackGame(canvas);
             var playBlackjackMethod = typeof(BlackjackGame).GetMethod("PlayBlackjack", BindingFlags.NonPublic | BindingFlags.Instance);
             playBlackjackMethod?.Invoke(game, new object[] { dealer, player, deck });
 

@@ -1,3 +1,4 @@
+using ConceptOfRandom.View;
 using ConsoleRenderer;
 
 namespace ConceptOfRandom.view;
@@ -11,10 +12,7 @@ public class WaveAnimation : MenuOutline {
 
 	public void Wave() {
 		var waveText = "Wave Animation!";
-		var titleText = "Concept of Random";
 		var waveTextX = (_canvas.Width - waveText.Length) / 2;
-		var titleTextX = (_canvas.Width - titleText.Length) / 2;
-		var titleTextY = 1;
 
 		var startTime = DateTime.Now;
 
@@ -27,7 +25,6 @@ public class WaveAnimation : MenuOutline {
 			var currentTime = DateTime.Now;
 			_canvas.Clear();
 			_canvas.CreateBorder();
-			_canvas.Text(titleTextX, titleTextY, titleText);
 
 			for (int i = 0; i < waveText.Length; i++) {
 				int x = waveTextX + i;
@@ -35,7 +32,6 @@ public class WaveAnimation : MenuOutline {
 				_canvas.Set(x, y, waveText[i], ConsoleColor.White, ConsoleColor.Black);
 			}
 
-			_canvas.AutoResize = true;
 			_canvas.Render();
 			System.Threading.Thread.Sleep(100);
 		}
@@ -43,7 +39,7 @@ public class WaveAnimation : MenuOutline {
 		// Clear the canvas and reset for the next Tick() call
 		_canvas.Clear();
 		_canvas.CreateBorder();
-		MakeTitle();
+		RenderMenu();
 		_canvas.Render();
 	}
 }

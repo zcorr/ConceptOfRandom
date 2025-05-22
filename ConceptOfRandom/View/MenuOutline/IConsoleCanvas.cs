@@ -5,7 +5,7 @@ public interface IConsoleCanvas {
 	void Render();
 	
 	// Tick to update the console display
-	void Tick();
+	//void Tick();
 	
 	// Create console border display
 	void CreateBorder();
@@ -15,4 +15,8 @@ public interface IConsoleCanvas {
 	
 	// Clear the console display
 	void Clear();
+	
+	void Text(int x, int y, string text);
+
+	int Width { get; } 
 }

@@ -1,14 +1,15 @@
 ﻿using ConsoleRenderer;
 using ConceptOfRandom.Models.Simulation.Blackjack;
+using ConceptOfRandom.View;
 
 namespace ConceptOfRandom.view;
 
 public class BlackjackIntegration : MenuOutline
 {
-    private ConsoleCanvas _canvas;
+    private IConsoleCanvas _canvas;
     public BlackjackIntegration()
     {
-        _canvas = GetCanvas();
+        _canvas = this;
     }
 
     public void StartGame()
@@ -19,7 +20,6 @@ public class BlackjackIntegration : MenuOutline
      
         // Calling game - modified entire blackjack game to use console renderer (yay refactoring)
         var game = new BlackjackGame(_canvas);
-        
     }
 
     private void ExitGame()

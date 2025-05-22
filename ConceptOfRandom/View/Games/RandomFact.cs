@@ -1,5 +1,6 @@
 ﻿using ConsoleRenderer;
 using ConceptOfRandom.Models.API;
+using ConceptOfRandom.View;
 
 namespace ConceptOfRandom.view;
 
@@ -66,11 +67,10 @@ public class RandomFact : MenuOutline
         {
             _canvas.Clear();
             _canvas.CreateBorder();
-            MakeTitle();
+            RenderMenu();
             _canvas.Render();
-            break; // Exit to main menu
+            return; // Exit to main menu
         }
-
         _canvas.Render();
     }
 }

@@ -1,33 +1,20 @@
-﻿namespace ConceptOfRandom;
-using ConceptOfRandom.view;
+﻿using System.Reflection.Metadata.Ecma335;
+using ConceptOfRandom.View;
+
+namespace ConceptOfRandom;
+using ConceptOfRandom.View;
 using ConceptOfRandom.Models.Simulation.Blackjack.Utility_Classes;
 
 class Program
 {
     static void Main(string[] args) {
-        Console.CursorVisible = true;
-        var program = new MenuOutline();
-        program.AutoResize = true;
-        program.CreateBorder();
-
-        while (true)
-        {
-            try
-            {
-                if (Console.KeyAvailable)
-                {
-                    var key = Console.ReadKey(true).Key;
-                    program.HandleInput(key);
-                }
-                program.Tick();
+        Console.CursorVisible = false;
+        while (true) {
+            var controller = new Controller();
+            try {
+                controller.Run();
             }
-            catch (ReturnToMainMenuException)
-            {
-                // Return to the main menu by continuing the loop
-                Console.Clear();
-                program.Clear();
-                program.CreateBorder();
-                program.Render();
+            catch (ReturnToMainMenuException) {
                 continue;
             }
         }
