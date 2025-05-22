@@ -4,10 +4,10 @@ using ConceptOfRandom.View;
 
 namespace ConceptOfRandom.view;
 
-public class RandomFact : MenuOutline
+public class RandomFactIntegration : MenuOutline
 {
     private ConsoleCanvas _canvas;
-    public RandomFact()
+    public RandomFactIntegration()
     {
         _canvas = GetCanvas();
     }

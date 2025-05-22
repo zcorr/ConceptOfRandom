@@ -3,10 +3,10 @@ using ConsoleRenderer;
 
 namespace ConceptOfRandom.view;
 
-public class WaveAnimation : MenuOutline {
+public class WaveIntegration : MenuOutline {
 	private ConsoleCanvas _canvas;
 
-	public WaveAnimation() {
+	public WaveIntegration() {
 		_canvas = GetCanvas(); // Initialize the canvas using the inherited method
 	}
 
