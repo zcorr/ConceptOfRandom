@@ -21,33 +21,34 @@ public class GameUtilitiesTest
 	public void IsPlayAgain_HandlesInvalidInputThenYes()
 	{
 		// Arrange
-		Queue<ConsoleKey> inputs = new Queue<ConsoleKey>(new[] { ConsoleKey.M, ConsoleKey.Y });
-		var canvas = new TestConsoleCanvas();
+		Queue<string> inputs = new Queue<string>(new[] { "maybe", "Y" });
+		List<string> outputs = new List<string>();
 
 		bool result = GameUtilities.IsPlayAgain(
 			() => inputs.Dequeue(),
-			canvas
+			message => outputs.Add(message)
 		);
 
 		// Assert
 		Assert.True(result);
-		Assert.Contains("Would you like to play again? (Y/N)", canvas.Messages);
+		Assert.Contains("Incorrect Input!", outputs);
+		Assert.Contains("Game starting...", outputs);
 	}
 
 	[Fact]
 	public void IsPlayAgain_HandlesNoImmediately()
 	{
 		// Arrange
-		Queue<ConsoleKey> inputs = new Queue<ConsoleKey>(new[] { ConsoleKey.N });
-		var canvas = new TestConsoleCanvas();
+		Queue<string> inputs = new Queue<string>(new[] { "N" });
+		List<string> outputs = new List<string>();
 
 		bool result = GameUtilities.IsPlayAgain(
 			() => inputs.Dequeue(),
-			canvas
+			message => outputs.Add(message)
 		);
 
 		// Assert
 		Assert.False(result);
-		Assert.Contains("Would you like to play again? (Y/N)", canvas.Messages);
+		Assert.Contains("Thanks for playing!", outputs);
 	}
 }
