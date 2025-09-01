@@ -7,7 +7,7 @@ A final project created for SE320 at Chapman University.
 - Ivan: View / Controller / ConsoleRenderer + refactoring other people's code to work with those systems
 - Joshua: all API work, TimerObserver, TimerStatus, TimerTracker, a small amount of Blackjack Refactoring (see commits). Also put together documentation, video, code coverage report.
 - Maks: Bot, Coin, Dice, Pot, Player, Wallet, IRandomGenerator
-- Zack: Blackjack game, narration for simulation section and writing for blackjack section of video.
+- Zack: Blackjack game, ICardDisplayStrategy, all Enums and Utilities for game, narration for simulation section and writing for blackjack section of video.
 
 ## Build/Usage Instructions
 - Pull the repository into Rider (or download as a ZIP if an error occurs)
